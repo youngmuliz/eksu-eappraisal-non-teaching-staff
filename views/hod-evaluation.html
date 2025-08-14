@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Evaluation - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/hod-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hod-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-edit me-1"></i>Staff Evaluation
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-tie me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Role: <span id="userRole" class="badge bg-success">HOD</span>
+                            </h6></li>
+                            <li><h6 class="dropdown-header">
+                                Department: <span id="userDepartment">Loading...</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold text-success mb-1">Staff Performance Evaluation</h2>
+                            <p class="text-muted">Section B & C: HOD Assessment and Training Needs</p>
+                        </div>
+                        <div>
+                            <a href="/hod-dashboard.html" class="btn btn-outline-success">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Information -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user me-2"></i>Staff Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><strong>Staff Name:</strong> <span id="staffName">Loading...</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Department:</strong> <span id="department">Loading...</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Submission Date:</strong> <span id="submissionDate">Loading...</span></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Staff Form Data -->
+                    <div class="mt-3">
+                        <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#staffFormData">
+                            <i class="fas fa-eye me-2"></i>View Staff Self-Assessment
+                        </button>
+                        <div class="collapse mt-3" id="staffFormData">
+                            <div class="border p-3 rounded bg-light">
+                                <!-- Staff form data will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOD Evaluation Form -->
+            <form id="hodEvaluationForm">
+                <!-- Performance Evaluation Matrix for Staff School Teachers -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-clipboard-check me-2"></i>Performance Evaluation Matrix
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="evaluation-matrix">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th width="25%">Evaluation Criteria</th>
+                                            <th width="30%">Excellent (A-5)</th>
+                                            <th width="30%">Good (B-4)</th>
+                                            <th width="10%">Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td class="criteria-text">
+                                                <strong>Preparation of Lesson</strong><br>
+                                                <small class="text-muted">Prepares adequate and qualitative lesson notes as and when due</small>
+                                            </td>
+                                            <td><small>Prepares adequate and qualitative lesson notes as and when due</small></td>
+                                            <td><small>Does not prepare for his lessons as appropriate</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_1" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td class="criteria-text">
+                                                <strong>Use of Teaching Aid</strong><br>
+                                                <small class="text-muted">Uses appropriate quantity and quality of teaching aids all the time</small>
+                                            </td>
+                                            <td><small>Uses appropriate quantity and quality of teaching aids all the time</small></td>
+                                            <td><small>Does not value the use of teaching aid</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_2" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td class="criteria-text">
+                                                <strong>Conduct of Lessons</strong><br>
+                                                <small class="text-muted">Conducts lessons excellently with the use of appropriate methods</small>
+                                            </td>
+                                            <td><small>Conducts lessons excellently with the use of appropriate methods</small></td>
+                                            <td><small>Struggles with the delivery of his/her lessons</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_3" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td class="criteria-text">
+                                                <strong>Knowledge of Subject Matter</strong><br>
+                                                <small class="text-muted">Has good mastery of the subject matter</small>
+                                            </td>
+                                            <td><small>Has good mastery of the subject matter</small></td>
+                                            <td><small>Leaves authority in doubt of his knowledge of the subject matter</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_4" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td class="criteria-text">
+                                                <strong>Command of Language</strong><br>
+                                                <small class="text-muted">Always cogent and clear</small>
+                                            </td>
+                                            <td><small>Always cogent and clear. Puts his points across convincingly and concisely</small></td>
+                                            <td><small>Ambiguous, clumsy and obscure. Finds it difficult to express himself/herself</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_5" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td class="criteria-text">
+                                                <strong>Teacher/Pupil Interaction</strong><br>
+                                                <small class="text-muted">Uses appropriate techniques to carry pupils along</small>
+                                            </td>
+                                            <td><small>Uses appropriate techniques to carry his pupils along</small></td>
+                                            <td><small>Does not carry his/her pupils along</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_6" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td class="criteria-text">
+                                                <strong>Classroom Management</strong><br>
+                                                <small class="text-muted">Organization and management of class are highly commendable</small>
+                                            </td>
+                                            <td><small>Organization and Management of his/her class are highly commendable</small></td>
+                                            <td><small>The tone of the class exudes planlessness and repels the pupils</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_7" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td class="criteria-text">
+                                                <strong>Reliability Under Pressure</strong><br>
+                                                <small class="text-muted">Performs competently under pressure</small>
+                                            </td>
+                                            <td><small>Performs competently under pressure</small></td>
+                                            <td><small>Easily thrown off balance, not reliable, even under normal conditions</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_8" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td class="criteria-text">
+                                                <strong>Level of Efficiency and Effectiveness</strong><br>
+                                                <small class="text-muted">Gets great deal done within a set time</small>
+                                            </td>
+                                            <td><small>Gets great deal done within a set time, maintains a very high standard. His work is virtually error-proof</small></td>
+                                            <td><small>Sloppy in output. Maintains consistently low standard of work. Source of constant complaints</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_9" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td class="criteria-text">
+                                                <strong>Punctuality and Regularity at Work</strong><br>
+                                                <small class="text-muted">Regularly punctual at work and marks attendance register as appropriate</small>
+                                            </td>
+                                            <td><small>Regularly Punctual at work and marks the attendance register as appropriate</small></td>
+                                            <td><small>No regard for punctuality. Truant</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_10" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>11</td>
+                                            <td class="criteria-text">
+                                                <strong>Assignment and Evaluate</strong><br>
+                                                <small class="text-muted">Gives adequate assignment to pupils and evaluate work as and when due</small>
+                                            </td>
+                                            <td><small>Gives adequate assignment to pupils and evaluate the work as and evaluate the work as and when due</small></td>
+                                            <td><small>Hardly ever gives assignments and does not review work given to pupils</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_11" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td class="criteria-text">
+                                                <strong>Teacher's Personality</strong><br>
+                                                <small class="text-muted">Self-confident, enjoys respect of parents, pupils and colleagues</small>
+                                            </td>
+                                            <td><small>Self-confident, Enjoys respect of parents, pupils and colleagues. Tactful and conducts himself/herself well</small></td>
+                                            <td><small>Conducts himself/herself in a manner unbecoming of a teacher. He/she dresses to cause distraction and embarrassment</small></td>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="item_12" required>
+                                                    <option value="">Select</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="3">3 - Fair</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Score Summary -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card border-info">
+                                    <div class="card-body text-center">
+                                        <h5 class="text-info">Total Score</h5>
+                                        <h2 class="fw-bold text-primary" id="totalScore">0 / 60</h2>
+                                        <p class="text-muted mb-0">Maximum possible: 60 points</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-success">
+                                    <div class="card-body text-center">
+                                        <h5 class="text-success">Percentage Score</h5>
+                                        <h2 class="fw-bold text-success" id="percentageScore">0%</h2>
+                                        <p class="text-muted mb-0" id="gradeText">No Grade</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training Needs Assessment -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-graduation-cap me-2"></i>Training Needs Assessment
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="trainingNeeds" class="form-label">
+                                <strong>If as a result of the assessments made earlier in the report, you consider that the performance or potential could be recommended for training, please specify the training needs:</strong>
+                            </label>
+                            <textarea class="form-control" id="trainingNeeds" name="trainingNeeds" rows="4" placeholder="List specific training needs and recommendations..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="alternativeTraining" class="form-label">
+                                <strong>If they cannot be met by training on the job, please suggest, if possible, in which other areas they might be met:</strong>
+                            </label>
+                            <textarea class="form-control" id="alternativeTraining" name="alternativeTraining" rows="3" placeholder="Suggest alternative training approaches or external training programs..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="nextJobLevel" id="sameLevel" value="same_level">
+                                    <label class="form-check-label" for="sameLevel">Next job at the same level</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="nextJobLevel" id="differentJob" value="different_job">
+                                    <label class="form-check-label" for="differentJob">A different job in the same grade</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="nextJobLevel" id="transferJob" value="transfer_job">
+                                    <label class="form-check-label" for="transferJob">Transfer to a job at similar level in another occupation group or cadre</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <label for="jobTypeReason" class="form-label">
+                                <strong>If you have answered YES to any of the questions, say which kind of job and your reasons below:</strong>
+                            </label>
+                            <textarea class="form-control" id="jobTypeReason" name="jobTypeReason" rows="3" placeholder="Specify job type and provide detailed reasons..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall Assessment and Comments -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-comments me-2"></i>Overall Assessment & Comments
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="overallPerformance" class="form-label"><strong>Overall Performance Rating:</strong></label>
+                                <select class="form-select" id="overallPerformance" name="overallPerformance" required>
+                                    <option value="">Select Rating</option>
+                                    <option value="outstanding">Outstanding (80-100%)</option>
+                                    <option value="very_good">Very Good (70-79%)</option>
+                                    <option value="good">Good (60-69%)</option>
+                                    <option value="fair">Fair (50-59%)</option>
+                                    <option value="unsatisfactory">Unsatisfactory (Below 50%)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="recommendation" class="form-label"><strong>Recommendation:</strong></label>
+                                <select class="form-select" id="recommendation" name="recommendation" required>
+                                    <option value="">Select Recommendation</option>
+                                    <option value="promotion">Promotion</option>
+                                    <option value="confirmation">Confirmation</option>
+                                    <option value="normal_increment">Normal Increment</option>
+                                    <option value="training">Training</option>
+                                    <option value="improvement_needed">Improvement Needed</option>
+                                    <option value="disciplinary_action">Disciplinary Action Required</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <label for="comments" class="form-label"><strong>Additional Comments:</strong></label>
+                            <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Provide detailed comments on the staff member's performance, strengths, areas for improvement, and any other relevant observations..."></textarea>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <label for="developmentPlan" class="form-label"><strong>Career Development Plan:</strong></label>
+                            <textarea class="form-control" id="developmentPlan" name="developmentPlan" rows="3" placeholder="Outline recommended career development activities and goals for the next evaluation period..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Section -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="text-success mb-3">Complete HOD Evaluation</h5>
+                        <p class="text-muted mb-4">Please review all assessments and comments before submitting the evaluation.</p>
+                        
+                        <div class="mb-3">
+                            <div class="form-check d-inline-block">
+                                <input class="form-check-input" type="checkbox" id="confirmEvaluation" name="confirmEvaluation" required>
+                                <label class="form-check-label" for="confirmEvaluation">
+                                    I confirm that this evaluation is accurate and fair based on my assessment
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check me-2"></i>Submit Evaluation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Ekiti State University - E-Appraisal System</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        // Calculate score dynamically
+        function updateScore() {
+            const selects = document.querySelectorAll('select[name^="item_"]');
+            let totalScore = 0;
+            let selectedCount = 0;
+            
+            selects.forEach(select => {
+                if (select.value !== '') {
+                    totalScore += parseInt(select.value);
+                    selectedCount++;
+                }
+            });
+            
+            const maxPossibleScore = selects.length * 5;
+            const percentage = selectedCount > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
+            
+            document.getElementById('totalScore').textContent = totalScore + ' / ' + maxPossibleScore;
+            document.getElementById('percentageScore').textContent = percentage + '%';
+            
+            // Update grade text
+            let gradeText = 'No Grade';
+            let overallRating = '';
+            
+            if (percentage >= 80) {
+                gradeText = 'Outstanding';
+                overallRating = 'outstanding';
+            } else if (percentage >= 70) {
+                gradeText = 'Very Good';
+                overallRating = 'very_good';
+            } else if (percentage >= 60) {
+                gradeText = 'Good';
+                overallRating = 'good';
+            } else if (percentage >= 50) {
+                gradeText = 'Fair';
+                overallRating = 'fair';
+            } else if (percentage > 0) {
+                gradeText = 'Unsatisfactory';
+                overallRating = 'unsatisfactory';
+            }
+            
+            document.getElementById('gradeText').textContent = gradeText;
+            
+            // Auto-select overall performance rating
+            if (overallRating && selectedCount === selects.length) {
+                document.getElementById('overallPerformance').value = overallRating;
+            }
+        }
+
+        // Add event listeners to all evaluation selects
+        document.addEventListener('DOMContentLoaded', function() {
+            const selects = document.querySelectorAll('select[name^="item_"]');
+            selects.forEach(select => {
+                select.addEventListener('change', updateScore);
+            });
+            
+            // Initial score calculation
+            updateScore();
+        });
+    </script>
+</body>
+</html>

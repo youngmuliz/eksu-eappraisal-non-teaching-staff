@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="login-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="login-card">
+                        <div class="login-header">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-university fa-3x"></i>
+                            </div>
+                            <h2 class="text-center mb-0">E-Appraisal System</h2>
+                            <p class="text-center mb-0 opacity-75">Ekiti State University, Ado-Ekiti</p>
+                        </div>
+                        
+                        <div class="login-body">
+                            <form id="loginForm">
+                                <div class="mb-4">
+                                    <label for="role" class="form-label fw-bold">
+                                        <i class="fas fa-user-tag me-2"></i>User Role
+                                    </label>
+                                    <select class="form-select" id="role" name="role" required>
+                                        <option value="">Select your role</option>
+                                        <option value="staff">Staff Member</option>
+                                        <option value="hod">Head of Department</option>
+                                        <option value="committee">Committee Member</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="username" class="form-label fw-bold">
+                                        <i class="fas fa-user me-2"></i>Username
+                                    </label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="password" class="form-label fw-bold">
+                                        <i class="fas fa-lock me-2"></i>Password
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                                            <i class="fas fa-eye" id="toggleIcon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                </button>
+                                
+                                <div class="text-center">
+                                    <a href="/" class="text-decoration-none">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Demo Credentials Card -->
+                    <div class="card mt-4">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Demo Credentials
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="demo-credential">
+                                        <h6 class="fw-bold text-primary mb-2">Staff</h6>
+                                        <p class="mb-1 small">Username: <code>staff1</code></p>
+                                        <p class="mb-0 small">Password: <code>staff123</code></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="demo-credential">
+                                        <h6 class="fw-bold text-success mb-2">HOD</h6>
+                                        <p class="mb-1 small">Username: <code>hod1</code></p>
+                                        <p class="mb-0 small">Password: <code>hod123</code></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="demo-credential">
+                                        <h6 class="fw-bold text-warning mb-2">Committee</h6>
+                                        <p class="mb-1 small">Username: <code>committee1</code></p>
+                                        <p class="mb-0 small">Password: <code>committee123</code></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Quick fill demo credentials
+        function fillCredentials(role, username, password) {
+            document.getElementById('role').value = role;
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+        }
+
+        // Add click handlers for demo credentials
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoCredentials = document.querySelectorAll('.demo-credential');
+            demoCredentials.forEach(credential => {
+                credential.style.cursor = 'pointer';
+                credential.addEventListener('click', function() {
+                    const role = this.querySelector('h6').textContent.toLowerCase();
+                    const username = this.querySelector('code').textContent;
+                    const password = this.querySelectorAll('code')[1].textContent;
+                    
+                    fillCredentials(role === 'hod' ? 'hod' : role === 'committee' ? 'committee' : 'staff', username, password);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

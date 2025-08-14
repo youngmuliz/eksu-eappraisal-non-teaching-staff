@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/staff-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/staff-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/staff-form.html">
+                            <i class="fas fa-edit me-1"></i>New Appraisal
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Role: <span id="userRole" class="badge bg-primary">Staff</span>
+                            </h6></li>
+                            <li><h6 class="dropdown-header">
+                                Department: <span id="userDepartment">Loading...</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="welcome-card card">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h2 class="fw-bold text-primary mb-2">
+                                        Welcome, <span id="userNameWelcome">Staff Member</span>!
+                                    </h2>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        Today is <span id="currentDate"></span>
+                                    </p>
+                                    <p class="text-muted">
+                                        <i class="fas fa-building me-2"></i>
+                                        Department of <span id="userDepartmentWelcome">Loading...</span>
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <i class="fas fa-user-circle fa-5x text-primary opacity-75"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h4 class="fw-bold text-dark mb-3">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h4>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="dashboard-card" onclick="window.location.href='/staff-form.html'">
+                        <div class="icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h4>New Appraisal</h4>
+                        <p>Start a new performance appraisal form</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="dashboard-card" onclick="loadStaffAppraisals()">
+                        <div class="icon">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <h4>View Appraisals</h4>
+                        <p>Check status of submitted appraisals</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="dashboard-card">
+                        <div class="icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h4>Performance History</h4>
+                        <p>View your performance trends</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="dashboard-card">
+                        <div class="icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h4>Training Records</h4>
+                        <p>View training and development history</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Appraisals -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-history me-2"></i>Your Appraisals
+                            </h5>
+                            <button class="btn btn-primary btn-sm" onclick="window.location.href='/staff-form.html'">
+                                <i class="fas fa-plus me-2"></i>New Appraisal
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="staffAppraisals">
+                                <!-- Appraisals will be loaded here -->
+                                <div class="col-12 text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted mt-3">Loading your appraisals...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Ekiti State University - E-Appraisal System</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        // Set current date
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('currentDate').textContent = currentDate;
+            
+            // Set last update time
+            const lastUpdate = new Date().toLocaleString();
+            document.getElementById('lastUpdate').textContent = lastUpdate;
+
+            // Load user info for welcome section
+            loadUserInfo().then(() => {
+                const userName = document.getElementById('userName').textContent;
+                const userDepartment = document.getElementById('userDepartment').textContent;
+                
+                document.getElementById('userNameWelcome').textContent = userName;
+                document.getElementById('userDepartmentWelcome').textContent = userDepartment;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Appraisal Form - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/staff-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/staff-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/staff-form.html">
+                            <i class="fas fa-edit me-1"></i>New Appraisal
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Role: <span id="userRole" class="badge bg-primary">Staff</span>
+                            </h6></li>
+                            <li><h6 class="dropdown-header">
+                                Department: <span id="userDepartment">Loading...</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold text-primary mb-1">Staff Self-Assessment Form</h2>
+                            <p class="text-muted">Section A: Personal Data and Record of Service</p>
+                        </div>
+                        <div>
+                            <a href="/staff-dashboard.html" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appraisal Form -->
+            <form id="staffAppraisalForm" enctype="multipart/form-data">
+                <!-- Section A: Personal Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="employeeName" class="form-label">Name of Employee</label>
+                                <input type="text" class="form-control" id="employeeName" name="employeeName" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="placeOfBirth" class="form-label">Place of Birth</label>
+                                <input type="text" class="form-control" id="placeOfBirth" name="placeOfBirth" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="maritalStatus" class="form-label">Marital Status</label>
+                                <select class="form-select" id="maritalStatus" name="maritalStatus" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Divorced">Divorced</option>
+                                    <option value="Widowed">Widowed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="numberOfChildren" class="form-label">Number of Children</label>
+                                <input type="number" class="form-control" id="numberOfChildren" name="numberOfChildren" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section B: Employment Details -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-briefcase me-2"></i>Employment Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="firstAppointment" class="form-label">Date of First Appointment</label>
+                                <input type="date" class="form-control" id="firstAppointment" name="firstAppointment" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationDate" class="form-label">Effective Date of Confirmation</label>
+                                <input type="date" class="form-control" id="confirmationDate" name="confirmationDate">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="presentStatus" class="form-label">Present Status</label>
+                                <select class="form-select" id="presentStatus" name="presentStatus" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Probation">On Probation</option>
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Temporary">Temporary</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contissLevel" class="form-label">Present CONTISS Level</label>
+                                <input type="text" class="form-control" id="contissLevel" name="contissLevel" placeholder="e.g., CONTISS 08">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="appointmentType" class="form-label">Nature of Appointment</label>
+                                <select class="form-select" id="appointmentType" name="appointmentType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Permanent">Permanent</option>
+                                    <option value="Temporary">Temporary</option>
+                                    <option value="Contract">Contract</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="currentGrade" class="form-label">Current Grade Level</label>
+                                <input type="text" class="form-control" id="currentGrade" name="currentGrade" placeholder="e.g., GL 12">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section C: Academic Qualifications -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-graduation-cap me-2"></i>Academic Qualifications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="qualificationsContainer">
+                            <div class="qualification-item row g-3 mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Institution</label>
+                                    <input type="text" class="form-control" name="institution[]" placeholder="Name of Institution">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">From Year</label>
+                                    <input type="number" class="form-control" name="fromYear[]" min="1950" max="2030">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">To Year</label>
+                                    <input type="number" class="form-control" name="toYear[]" min="1950" max="2030">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Qualification</label>
+                                    <input type="text" class="form-control" name="qualification[]" placeholder="e.g., BSc, MSc">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addQualification()">
+                            <i class="fas fa-plus me-2"></i>Add Qualification
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section D: Professional Bodies -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-certificate me-2"></i>Professional Bodies
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="professionalBody" class="form-label">Professional Body/Society</label>
+                                <input type="text" class="form-control" id="professionalBody" name="professionalBody" placeholder="e.g., Institute of Chartered Accountants">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="membershipDate" class="form-label">Date of Award/Membership</label>
+                                <input type="date" class="form-control" id="membershipDate" name="membershipDate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section E: Service Records -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>Records of Service
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="serviceRecordsContainer">
+                            <div class="service-record-item row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Department</label>
+                                    <input type="text" class="form-control" name="serviceDepartment[]" placeholder="Department Name">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">From</label>
+                                    <input type="date" class="form-control" name="serviceFrom[]">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">To</label>
+                                    <input type="date" class="form-control" name="serviceTo[]">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Post/Grade</label>
+                                    <input type="text" class="form-control" name="servicePost[]" placeholder="Position held">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Supervising Officer</label>
+                                    <input type="text" class="form-control" name="supervisingOfficer[]" placeholder="Officer Name">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addServiceRecord()">
+                            <i class="fas fa-plus me-2"></i>Add Service Record
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section F: Training and Development -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>In-Service Training
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="trainingContainer">
+                            <div class="training-item row g-3 mb-3">
+                                <div class="col-md-2">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control" name="trainingDate[]">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Course Title</label>
+                                    <input type="text" class="form-control" name="courseTitle[]" placeholder="Training/Course Name">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Institution/Organization</label>
+                                    <input type="text" class="form-control" name="trainingInstitution[]" placeholder="Training Provider">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Duration</label>
+                                    <input type="text" class="form-control" name="trainingDuration[]" placeholder="e.g., 2 weeks">
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">Award</label>
+                                    <input type="text" class="form-control" name="trainingAward[]" placeholder="Certificate">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addTraining()">
+                            <i class="fas fa-plus me-2"></i>Add Training
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section G: Job Description and Duties -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tasks me-2"></i>Current Job Description
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="jobDescription" class="form-label">State your main duties during the period covered by this Report</label>
+                            <textarea class="form-control" id="jobDescription" name="jobDescription" rows="6" placeholder="Describe your main responsibilities and duties in detail..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="difficulties" class="form-label">What major difficulties did you encounter in the performance of your duties? Offer suggestions for their solutions</label>
+                            <textarea class="form-control" id="difficulties" name="difficulties" rows="4" placeholder="Describe any challenges faced and your suggested solutions..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="additionalInfo" class="form-label">Any other useful information peculiar to your duty during the period covered by this Report?</label>
+                            <textarea class="form-control" id="additionalInfo" name="additionalInfo" rows="3" placeholder="Any additional relevant information..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section H: Major Contributions -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-star me-2"></i>Major Contributions to the University
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="majorContributions" class="form-label">List major contributions (Outside normal official duties)</label>
+                            <textarea class="form-control" id="majorContributions" name="majorContributions" rows="4" placeholder="List any significant contributions beyond your regular duties..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section I: Publications -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-book me-2"></i>Publications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="publications" class="form-label">Publications (attach annexure if any)</label>
+                            <textarea class="form-control" id="publications" name="publications" rows="4" placeholder="List your publications, research papers, articles, etc..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section J: Supporting Documents -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-paperclip me-2"></i>Supporting Documents
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                            <h5>Upload Supporting Document</h5>
+                            <p class="text-muted">Click here or drag and drop your file</p>
+                            <p class="text-muted small">Maximum file size: 10MB. Supported formats: PDF, DOC, DOCX, JPG, PNG</p>
+                            <input type="file" class="form-control" id="supportingDocument" name="supportingDocument" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Section -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="text-primary mb-3">Ready to Submit?</h5>
+                        <p class="text-muted mb-4">Please review all information before submitting your appraisal form.</p>
+                        
+                        <div class="mb-3">
+                            <div class="form-check d-inline-block">
+                                <input class="form-check-input" type="checkbox" id="confirmAccuracy" name="confirmAccuracy" required>
+                                <label class="form-check-label" for="confirmAccuracy">
+                                    I certify that the information provided is accurate and complete
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Appraisal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Ekiti State University - E-Appraisal System</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        function addQualification() {
+            const container = document.getElementById('qualificationsContainer');
+            const qualificationItem = document.createElement('div');
+            qualificationItem.className = 'qualification-item row g-3 mb-3';
+            qualificationItem.innerHTML = `
+                <div class="col-md-4">
+                    <label class="form-label">Institution</label>
+                    <input type="text" class="form-control" name="institution[]" placeholder="Name of Institution">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">From Year</label>
+                    <input type="number" class="form-control" name="fromYear[]" min="1950" max="2030">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">To Year</label>
+                    <input type="number" class="form-control" name="toYear[]" min="1950" max="2030">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">Qualification</label>
+                    <input type="text" class="form-control" name="qualification[]" placeholder="e.g., BSc">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="button" class="btn btn-outline-danger btn-sm d-block" onclick="removeQualification(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(qualificationItem);
+        }
+
+        function removeQualification(button) {
+            button.closest('.qualification-item').remove();
+        }
+
+        function addServiceRecord() {
+            const container = document.getElementById('serviceRecordsContainer');
+            const serviceItem = document.createElement('div');
+            serviceItem.className = 'service-record-item row g-3 mb-3';
+            serviceItem.innerHTML = `
+                <div class="col-md-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" name="serviceDepartment[]" placeholder="Department Name">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From</label>
+                    <input type="date" class="form-control" name="serviceFrom[]">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To</label>
+                    <input type="date" class="form-control" name="serviceTo[]">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Post/Grade</label>
+                    <input type="text" class="form-control" name="servicePost[]" placeholder="Position">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Supervising Officer</label>
+                    <input type="text" class="form-control" name="supervisingOfficer[]" placeholder="Officer Name">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="button" class="btn btn-outline-danger btn-sm d-block" onclick="removeServiceRecord(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(serviceItem);
+        }
+
+        function removeServiceRecord(button) {
+            button.closest('.service-record-item').remove();
+        }
+
+        function addTraining() {
+            const container = document.getElementById('trainingContainer');
+            const trainingItem = document.createElement('div');
+            trainingItem.className = 'training-item row g-3 mb-3';
+            trainingItem.innerHTML = `
+                <div class="col-md-2">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" name="trainingDate[]">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Course Title</label>
+                    <input type="text" class="form-control" name="courseTitle[]" placeholder="Training Name">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Institution/Organization</label>
+                    <input type="text" class="form-control" name="trainingInstitution[]" placeholder="Provider">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Duration</label>
+                    <input type="text" class="form-control" name="trainingDuration[]" placeholder="Duration">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">Award</label>
+                    <input type="text" class="form-control" name="trainingAward[]" placeholder="Award">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="button" class="btn btn-outline-danger btn-sm d-block" onclick="removeTraining(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(trainingItem);
+        }
+
+        function removeTraining(button) {
+            button.closest('.training-item').remove();
+        }
+    </script>
+</body>
+</html>

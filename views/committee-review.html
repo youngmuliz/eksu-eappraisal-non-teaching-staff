@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Committee Review - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/committee-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/committee-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-gavel me-1"></i>Committee Review
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-users me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Role: <span id="userRole" class="badge bg-warning">Committee</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold text-warning mb-1">Committee Review Panel</h2>
+                            <p class="text-muted">Section D: Overall Recommendation by Departmental/Faculty Review Panel</p>
+                        </div>
+                        <div>
+                            <a href="/committee-dashboard.html" class="btn btn-outline-warning">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff and HOD Information -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-user me-2"></i>Staff Information
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Staff Name:</strong> <span id="staffName">Loading...</span></p>
+                            <p><strong>Department:</strong> <span id="department">Loading...</span></p>
+                            <p class="mb-0"><strong>Position:</strong> Academic/Non-Academic Staff</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-user-tie me-2"></i>HOD Evaluation Summary
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Evaluated by:</strong> <span id="hodEvaluator">Loading...</span></p>
+                            <p><strong>Performance Score:</strong> <span id="hodScore" class="fw-bold text-success">Loading...</span></p>
+                            <p class="mb-0"><strong>HOD Recommendation:</strong> <span id="hodRecommendation">Loading...</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Appraisal Data -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-file-alt me-2"></i>Complete Appraisal Data
+                        </h6>
+                        <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#fullAppraisalData">
+                            <i class="fas fa-eye me-2"></i>View Full Details
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="fullAppraisalData">
+                    <div class="card-body">
+                        <!-- Complete appraisal data will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Committee Review Form -->
+            <form id="committeeReviewForm">
+                <!-- Final Recommendations -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-gavel me-2"></i>Committee Final Recommendation
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="fw-bold">Select the appropriate recommendation (tick inside the box as appropriate):</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Positive Actions -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-success fw-bold mb-3">
+                                    <i class="fas fa-plus-circle me-2"></i>Positive Actions
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="confirmation" value="confirmation">
+                                    <label class="form-check-label" for="confirmation">
+                                        <strong>Confirmation of appointment with effect from:</strong>
+                                        <input type="date" class="form-control form-control-sm mt-1" name="confirmationDate" id="confirmationDate">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="promotion" value="promotion">
+                                    <label class="form-check-label" for="promotion">
+                                        <strong>Promotion to the post of:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="promotionPost" id="promotionPost" placeholder="New position/grade">
+                                        <small class="text-muted">With effect from:</small>
+                                        <input type="date" class="form-control form-control-sm mt-1" name="promotionDate" id="promotionDate">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="commendation" value="commendation">
+                                    <label class="form-check-label" for="commendation">
+                                        <strong>Commendation (indicate purpose):</strong>
+                                        <textarea class="form-control form-control-sm mt-1" name="commendationPurpose" id="commendationPurpose" rows="2" placeholder="Reason for commendation"></textarea>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="regrading" value="regrading">
+                                    <label class="form-check-label" for="regrading">
+                                        <strong>Regrading to the post of:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="regradingPost" id="regradingPost" placeholder="New grade/position">
+                                        <small class="text-muted">With effect from:</small>
+                                        <input type="date" class="form-control form-control-sm mt-1" name="regradingDate" id="regradingDate">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="normalIncrement" value="normal_increment">
+                                    <label class="form-check-label" for="normalIncrement">
+                                        <strong>Normal Increment</strong>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="training" value="training">
+                                    <label class="form-check-label" for="training">
+                                        <strong>Training:</strong>
+                                        <textarea class="form-control form-control-sm mt-1" name="trainingDetails" id="trainingDetails" rows="2" placeholder="Specify training requirements"></textarea>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disciplinary Actions -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-danger fw-bold mb-3">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Disciplinary Actions
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="sanction" value="sanction">
+                                    <label class="form-check-label" for="sanction">
+                                        <strong>Sanction:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="sanctionDetails" id="sanctionDetails" placeholder="Specify sanction">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="warning" value="warning">
+                                    <label class="form-check-label" for="warning">
+                                        <strong>Warning:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="warningDetails" id="warningDetails" placeholder="Specify warning type">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="deferredIncrement" value="deferred_increment">
+                                    <label class="form-check-label" for="deferredIncrement">
+                                        <strong>Deferred Increment:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="deferredDetails" id="deferredDetails" placeholder="Duration/reason">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="withholdingIncrement" value="withholding_increment">
+                                    <label class="form-check-label" for="withholdingIncrement">
+                                        <strong>Withholding of Increment:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="withholdingDetails" id="withholdingDetails" placeholder="Duration/reason">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="termination" value="termination">
+                                    <label class="form-check-label" for="termination">
+                                        <strong>Termination:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="terminationDetails" id="terminationDetails" placeholder="Reason for termination">
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="recommendation" id="dismissal" value="dismissal">
+                                    <label class="form-check-label" for="dismissal">
+                                        <strong>Dismissal:</strong>
+                                        <input type="text" class="form-control form-control-sm mt-1" name="dismissalDetails" id="dismissalDetails" placeholder="Reason for dismissal">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Committee Comments and Justification -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-comments me-2"></i>Committee Comments & Justification
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="committeeComments" class="form-label">
+                                <strong>Committee Comments and Observations:</strong>
+                            </label>
+                            <textarea class="form-control" id="committeeComments" name="committeeComments" rows="4" placeholder="Provide detailed comments on the committee's assessment and the basis for the recommendation..." required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="justification" class="form-label">
+                                <strong>Justification for Recommendation:</strong>
+                            </label>
+                            <textarea class="form-control" id="justification" name="justification" rows="3" placeholder="Explain the reasoning behind the committee's final recommendation..." required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="additionalNotes" class="form-label">
+                                <strong>Additional Notes (if any):</strong>
+                            </label>
+                            <textarea class="form-control" id="additionalNotes" name="additionalNotes" rows="2" placeholder="Any additional observations or recommendations..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel Signatures -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-signature me-2"></i>Panel Signatures & Authorization
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="chairmanName" class="form-label">
+                                        <strong>Name of Chairman to the Review Panel:</strong>
+                                    </label>
+                                    <input type="text" class="form-control" id="chairmanName" name="chairmanName" placeholder="Chairman's full name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="chairmanSignature" class="form-label">
+                                        <strong>Signature of Chairman:</strong>
+                                    </label>
+                                    <div class="signature-box border p-3 text-center bg-light">
+                                        <small class="text-muted">Digital signature: Committee Chairman</small>
+                                        <input type="hidden" name="chairmanSignature" value="Digital Signature - Committee Chairman">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="secretaryName" class="form-label">
+                                        <strong>Name of Secretary to the Review Panel:</strong>
+                                    </label>
+                                    <input type="text" class="form-control" id="secretaryName" name="secretaryName" placeholder="Secretary's full name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="secretarySignature" class="form-label">
+                                        <strong>Signature of Secretary:</strong>
+                                    </label>
+                                    <div class="signature-box border p-3 text-center bg-light">
+                                        <small class="text-muted">Digital signature: Committee Secretary</small>
+                                        <input type="hidden" name="secretarySignature" value="Digital Signature - Committee Secretary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="reviewDate" class="form-label">
+                                    <strong>Date of Review:</strong>
+                                </label>
+                                <input type="date" class="form-control" id="reviewDate" name="reviewDate" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Section -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="text-warning mb-3">Submit Committee Review</h5>
+                        <p class="text-muted mb-4">Please ensure all fields are completed and the recommendation is appropriate before submitting.</p>
+                        
+                        <div class="mb-3">
+                            <div class="form-check d-inline-block">
+                                <input class="form-check-input" type="checkbox" id="confirmReview" name="confirmReview" required>
+                                <label class="form-check-label" for="confirmReview">
+                                    I confirm that this review has been conducted fairly and the committee's recommendation is final
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-gavel me-2"></i>Submit Final Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Ekiti State University - E-Appraisal System</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        // Set today's date as default for review date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reviewDate').value = today;
+            
+            // Add event listeners for conditional fields
+            setupConditionalFields();
+        });
+
+        // Setup conditional field visibility based on recommendation selection
+        function setupConditionalFields() {
+            const radioButtons = document.querySelectorAll('input[name="recommendation"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Hide all conditional fields first
+                    const conditionalFields = document.querySelectorAll('[id$="Date"], [id$="Post"], [id$="Details"], [id$="Purpose"]');
+                    conditionalFields.forEach(field => {
+                        field.removeAttribute('required');
+                        field.closest('.form-check').classList.remove('border', 'border-primary', 'p-2', 'rounded');
+                    });
+                    
+                    // Show and require fields for selected recommendation
+                    if (this.checked) {
+                        const relatedFields = this.closest('.form-check').querySelectorAll('input, textarea');
+                        relatedFields.forEach(field => {
+                            if (field !== this && field.type !== 'hidden') {
+                                field.setAttribute('required', 'required');
+                            }
+                        });
+                        
+                        // Highlight selected recommendation
+                        this.closest('.form-check').classList.add('border', 'border-primary', 'p-2', 'rounded');
+                    }
+                });
+            });
+        }
+
+        // Validate form before submission
+        function validateCommitteeForm() {
+            const selectedRecommendation = document.querySelector('input[name="recommendation"]:checked');
+            if (!selectedRecommendation) {
+                showAlert('Please select a recommendation before submitting.', 'danger');
+                return false;
+            }
+            
+            const chairmanName = document.getElementById('chairmanName').value.trim();
+            const secretaryName = document.getElementById('secretaryName').value.trim();
+            
+            if (!chairmanName || !secretaryName) {
+                showAlert('Chairman and Secretary names are required.', 'danger');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Override form submission to include validation
+        document.getElementById('committeeReviewForm').addEventListener('submit', function(e) {
+            if (!validateCommitteeForm()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>

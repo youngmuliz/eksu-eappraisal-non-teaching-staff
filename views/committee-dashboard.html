@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Committee Dashboard - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/committee-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/committee-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-users me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Role: <span id="userRole" class="badge bg-warning">Committee</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="welcome-card card">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h2 class="fw-bold text-warning mb-2">
+                                        Welcome to Committee Review Panel!
+                                    </h2>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        Today is <span id="currentDate"></span>
+                                    </p>
+                                    <p class="text-muted">
+                                        <i class="fas fa-gavel me-2"></i>
+                                        Review and make final recommendations on staff appraisals
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <i class="fas fa-users fa-5x text-warning opacity-75"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card border-primary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
+                            <h3 class="fw-bold text-primary" id="totalAppraisals">0</h3>
+                            <p class="text-muted mb-0">Total Appraisals</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-warning">
+                        <div class="card-body text-center">
+                            <i class="fas fa-hourglass-half fa-3x text-warning mb-3"></i>
+                            <h3 class="fw-bold text-warning" id="pendingReviews">0</h3>
+                            <p class="text-muted mb-0">Pending Reviews</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <i class="fas fa-check-double fa-3x text-success mb-3"></i>
+                            <h3 class="fw-bold text-success" id="completedReviews">0</h3>
+                            <p class="text-muted mb-0">Completed Reviews</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-info">
+                        <div class="card-body text-center">
+                            <i class="fas fa-star fa-3x text-info mb-3"></i>
+                            <h3 class="fw-bold text-info" id="recommendedPromotions">0</h3>
+                            <p class="text-muted mb-0">Recommended Promotions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-bolt me-2"></i>Quick Actions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex gap-3 flex-wrap">
+                                <button class="btn btn-primary" onclick="viewAllStaffAssessments()">
+                                    <i class="fas fa-users me-2"></i>View All Staff Assessments
+                                </button>
+                                <button class="btn btn-info" onclick="generateReports()">
+                                    <i class="fas fa-chart-bar me-2"></i>Generate Reports
+                                </button>
+                                <button class="btn btn-success" onclick="exportData()">
+                                    <i class="fas fa-download me-2"></i>Export Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appraisals for Committee Review -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list-alt me-2"></i>Appraisals for Committee Review
+                            </h5>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-warning btn-sm active" onclick="filterReviews('all')">All</button>
+                                <button class="btn btn-outline-primary btn-sm" onclick="filterReviews('pending')">Pending</button>
+                                <button class="btn btn-outline-success btn-sm" onclick="filterReviews('completed')">Completed</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="committeeAppraisals">
+                                <!-- Appraisals will be loaded here -->
+                                <div class="col-12 text-center py-5">
+                                    <div class="spinner-border text-warning" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted mt-3">Loading appraisals for committee review...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Recent Committee Decisions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-history me-2"></i>Recent Committee Decisions
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Staff Name</th>
+                                            <th>Department</th>
+                                            <th>HOD Score</th>
+                                            <th>Committee Decision</th>
+                                            <th>Date Reviewed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentDecisions">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No recent decisions available</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Assessment Detail Modal -->
+    <div class="modal fade" id="staffAssessmentModal" tabindex="-1" aria-labelledby="staffAssessmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staffAssessmentModalLabel">
+                        <i class="fas fa-user-circle me-2"></i>Complete Staff Assessment Details
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="assessmentContent">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted mt-3">Loading staff assessment details...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="reviewBtn" onclick="goToReview()">
+                        <i class="fas fa-gavel me-2"></i>Review Staff
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Staff Assessments Modal -->
+    <div class="modal fade" id="allStaffModal" tabindex="-1" aria-labelledby="allStaffModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="allStaffModalLabel">
+                        <i class="fas fa-users me-2"></i>All Staff Assessments Overview
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="allStaffContent">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted mt-3">Loading all staff assessments...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Ekiti State University - E-Appraisal System</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        let currentAssessmentId = null;
+
+        // Filter reviews by status
+        function filterReviews(status) {
+            const buttons = document.querySelectorAll('.btn-group button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            const cards = document.querySelectorAll('#committeeAppraisals .col-md-6');
+            cards.forEach(card => {
+                if (status === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const statusBadge = card.querySelector('.badge');
+                    const cardStatus = statusBadge ? statusBadge.textContent.toLowerCase() : '';
+                    
+                    if (status === 'pending' && cardStatus.includes('pending')) {
+                        card.style.display = 'block';
+                    } else if (status === 'completed' && cardStatus.includes('completed')) {
+                        card.style.display = 'block';
+                    } else if (status !== 'all') {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Update statistics based on loaded data
+        function updateCommitteeStatistics(appraisals) {
+            const totalAppraisals = appraisals.length;
+            const pendingReviews = appraisals.filter(a => a.status === 'hod_evaluated').length;
+            const completedReviews = appraisals.filter(a => a.status === 'completed').length;
+            const recommendedPromotions = appraisals.filter(a => 
+                a.committeeReview && 
+                (a.committeeReview.recommendation === 'promotion' || a.committeeReview.recommendation === 'confirmation')
+            ).length;
+            
+            document.getElementById('totalAppraisals').textContent = totalAppraisals;
+            document.getElementById('pendingReviews').textContent = pendingReviews;
+            document.getElementById('completedReviews').textContent = completedReviews;
+            document.getElementById('recommendedPromotions').textContent = recommendedPromotions;
+        }
+
+        // Load committee appraisals with detailed view option
+        async function loadCommitteeAppraisals() {
+            const container = document.getElementById('committeeAppraisals');
+            if (!container) return;
+            
+            try {
+                const response = await fetch('/api/committee/appraisals');
+                const appraisals = await response.json();
+                
+                // Update statistics
+                updateCommitteeStatistics(appraisals);
+                
+                // Load recent decisions
+                loadRecentDecisions(appraisals);
+                
+                if (appraisals.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No appraisals pending committee review.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = appraisals.map(appraisal => `
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">${appraisal.staffName}</h5>
+                                <span class="badge bg-${getStatusColor(appraisal.status)}">${formatStatus(appraisal.status)}</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">Department</small>
+                                        <p class="mb-0 fw-semibold">${appraisal.department}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">HOD Evaluated</small>
+                                        <p class="mb-0 fw-semibold">${new Date(appraisal.hodEvaluation.evaluatedAt).toLocaleDateString()}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">HOD Score</small>
+                                        <p class="mb-0">${appraisal.hodEvaluation.totalScore || 'N/A'}%</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Evaluated By</small>
+                                        <p class="mb-0">${appraisal.hodEvaluation.evaluatedBy}</p>
+                                    </div>
+                                </div>
+
+                                ${appraisal.data.employeeName ? `
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">Employee Name</small>
+                                        <p class="mb-0">${appraisal.data.employeeName}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Current Grade</small>
+                                        <p class="mb-0">${appraisal.data.currentGrade || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Present Status</small>
+                                    <p class="mb-0">${appraisal.data.presentStatus || 'N/A'}</p>
+                                </div>
+                                
+                                ${appraisal.hodEvaluation.recommendation ? `
+                                <div class="mb-3">
+                                    <small class="text-muted">HOD Recommendation</small>
+                                    <p class="mb-0">
+                                        <span class="badge bg-info">${appraisal.hodEvaluation.recommendation}</span>
+                                    </p>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary btn-sm flex-fill" onclick="viewCompleteAssessment(${appraisal.id})">
+                                        <i class="fas fa-eye me-1"></i>View Complete Details
+                                    </button>
+                                    ${appraisal.status === 'hod_evaluated' ? 
+                                        `<button class="btn btn-success btn-sm" onclick="reviewAppraisal(${appraisal.id})">
+                                            <i class="fas fa-gavel me-1"></i>Review
+                                        </button>` : ''
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<div class="col-12"><div class="alert alert-danger">Error loading appraisals</div></div>';
+            }
+        }
+
+        // Load recent committee decisions
+        function loadRecentDecisions(appraisals) {
+            const completedAppraisals = appraisals
+                .filter(a => a.status === 'completed' && a.committeeReview)
+                .sort((a, b) => new Date(b.committeeReview.reviewedAt) - new Date(a.committeeReview.reviewedAt))
+                .slice(0, 5);
+            
+            const tbody = document.getElementById('recentDecisions');
+            
+            if (completedAppraisals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent decisions available</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = completedAppraisals.map(appraisal => `
+                <tr>
+                    <td>${appraisal.staffName}</td>
+                    <td>${appraisal.department}</td>
+                    <td>${appraisal.hodEvaluation.totalScore || 'N/A'}%</td>
+                    <td>
+                        <span class="badge bg-${getRecommendationColor(appraisal.committeeReview.recommendation)}">
+                            ${formatRecommendation(appraisal.committeeReview.recommendation)}
+                        </span>
+                    </td>
+                    <td>${new Date(appraisal.committeeReview.reviewedAt).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        // View complete staff assessment details
+        async function viewCompleteAssessment(assessmentId) {
+            currentAssessmentId = assessmentId;
+            
+            const modal = new bootstrap.Modal(document.getElementById('staffAssessmentModal'));
+            const content = document.getElementById('assessmentContent');
+            const reviewBtn = document.getElementById('reviewBtn');
+            
+            // Reset content
+            content.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-3">Loading staff assessment details...</p>
+                </div>
+            `;
+            
+            modal.show();
+            
+            try {
+                const response = await fetch(`/api/committee/staff-assessment/${assessmentId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch assessment details');
+                }
+                
+                const assessment = await response.json();
+                
+                // Show/hide review button based on status
+                if (assessment.status === 'hod_evaluated') {
+                    reviewBtn.style.display = 'inline-block';
+                } else {
+                    reviewBtn.style.display = 'none';
+                }
+                
+                content.innerHTML = generateCommitteeAssessmentHTML(assessment);
+                
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error loading assessment details. Please try again.
+                    </div>
+                `;
+            }
+        }
+
+        // View all staff assessments
+        async function viewAllStaffAssessments() {
+            const modal = new bootstrap.Modal(document.getElementById('allStaffModal'));
+            const content = document.getElementById('allStaffContent');
+            
+            // Reset content
+            content.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-3">Loading all staff assessments...</p>
+                </div>
+            `;
+            
+            modal.show();
+            
+            try {
+                const response = await fetch('/api/committee/all-staff-assessments');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch all staff assessments');
+                }
+                
+                const assessments = await response.json();
+                content.innerHTML = generateAllStaffHTML(assessments);
+                
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error loading staff assessments. Please try again.
+                    </div>
+                `;
+            }
+        }
+
+        // Generate complete assessment HTML for committee
+        function generateCommitteeAssessmentHTML(assessment) {
+            return `
+                <!-- Staff Overview -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0"><i class="fas fa-user me-2"></i>Staff Overview</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Staff Name:</strong> ${assessment.staffName}</p>
+                                <p><strong>Department:</strong> ${assessment.department}</p>
+                                <p><strong>Submission Date:</strong> ${new Date(assessment.submittedAt).toLocaleDateString()}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Status:</strong> <span class="badge bg-${getStatusColor(assessment.status)}">${formatStatus(assessment.status)}</span></p>
+                                <p><strong>Current Grade:</strong> ${assessment.employmentDetails.currentGrade || 'N/A'}</p>
+                                <p><strong>CONTISS Level:</strong> ${assessment.employmentDetails.contissLevel || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-user-circle me-2"></i>Personal Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Full Name:</strong> ${assessment.personalInfo.employeeName || 'N/A'}</p>
+                                <p><strong>Date of Birth:</strong> ${assessment.personalInfo.dateOfBirth || 'N/A'}</p>
+                                <p><strong>Place of Birth:</strong> ${assessment.personalInfo.placeOfBirth || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Marital Status:</strong> ${assessment.personalInfo.maritalStatus || 'N/A'}</p>
+                                <p><strong>Number of Children:</strong> ${assessment.personalInfo.numberOfChildren || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employment Details -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-briefcase me-2"></i>Employment Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Date of First Appointment:</strong> ${assessment.employmentDetails.firstAppointment || 'N/A'}</p>
+                                <p><strong>Confirmation Date:</strong> ${assessment.employmentDetails.confirmationDate || 'N/A'}</p>
+                                <p><strong>Present Status:</strong> ${assessment.employmentDetails.presentStatus || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Nature of Appointment:</strong> ${assessment.employmentDetails.appointmentType || 'N/A'}</p>
+                                <p><strong>Current Grade Level:</strong> ${assessment.employmentDetails.currentGrade || 'N/A'}</p>
+                                <p><strong>CONTISS Level:</strong> ${assessment.employmentDetails.contissLevel || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Qualifications -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Academic Qualifications</h6>
+                    </div>
+                    <div class="card-body">
+                        ${assessment.academicQualifications.length > 0 ? `
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Institution</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Qualification</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${assessment.academicQualifications.map(qual => `
+                                            <tr>
+                                                <td>${qual.institution || 'N/A'}</td>
+                                                <td>${qual.fromYear || 'N/A'}</td>
+                                                <td>${qual.toYear || 'N/A'}</td>
+                                                <td>${qual.qualification || 'N/A'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p class="text-muted">No academic qualifications recorded.</p>'}
+                    </div>
+                </div>
+
+                <!-- Professional Bodies -->
+                ${assessment.professionalBodies.professionalBody ? `
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-certificate me-2"></i>Professional Bodies</h6>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Professional Body:</strong> ${assessment.professionalBodies.professionalBody}</p>
+                        <p><strong>Membership Date:</strong> ${assessment.professionalBodies.membershipDate || 'N/A'}</p>
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- Service Records -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-history me-2"></i>Records of Service</h6>
+                    </div>
+                    <div class="card-body">
+                        ${assessment.serviceRecords.length > 0 ? `
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Department</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Post/Grade</th>
+                                            <th>Supervising Officer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${assessment.serviceRecords.map(record => `
+                                            <tr>
+                                                <td>${record.serviceDepartment || 'N/A'}</td>
+                                                <td>${record.serviceFrom || 'N/A'}</td>
+                                                <td>${record.serviceTo || 'N/A'}</td>
+                                                <td>${record.servicePost || 'N/A'}</td>
+                                                <td>${record.supervisingOfficer || 'N/A'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p class="text-muted">No service records available.</p>'}
+                    </div>
+                </div>
+
+                <!-- Training Records -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chalkboard-teacher me-2"></i>Training & Development</h6>
+                    </div>
+                    <div class="card-body">
+                        ${assessment.trainingRecords.length > 0 ? `
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Course Title</th>
+                                            <th>Institution</th>
+                                            <th>Duration</th>
+                                            <th>Award</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${assessment.trainingRecords.map(training => `
+                                            <tr>
+                                                <td>${training.trainingDate || 'N/A'}</td>
+                                                <td>${training.courseTitle || 'N/A'}</td>
+                                                <td>${training.trainingInstitution || 'N/A'}</td>
+                                                <td>${training.trainingDuration || 'N/A'}</td>
+                                                <td>${training.trainingAward || 'N/A'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p class="text-muted">No training records available.</p>'}
+                    </div>
+                </div>
+
+                <!-- Job Description & Performance -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-tasks me-2"></i>Job Description & Performance</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6>Main Duties:</h6>
+                            <p class="text-justify">${assessment.jobDescription.jobDescription || 'N/A'}</p>
+                        </div>
+                        
+                        ${assessment.jobDescription.difficulties ? `
+                        <div class="mb-3">
+                            <h6>Difficulties Encountered:</h6>
+                            <p class="text-justify">${assessment.jobDescription.difficulties}</p>
+                        </div>
+                        ` : ''}
+                        
+                        ${assessment.jobDescription.additionalInfo ? `
+                        <div class="mb-3">
+                            <h6>Additional Information:</h6>
+                            <p class="text-justify">${assessment.jobDescription.additionalInfo}</p>
+                        </div>
+                        ` : ''}
+                        
+                        ${assessment.jobDescription.majorContributions ? `
+                        <div class="mb-3">
+                            <h6>Major Contributions:</h6>
+                            <p class="text-justify">${assessment.jobDescription.majorContributions}</p>
+                        </div>
+                        ` : ''}
+                        
+                        ${assessment.jobDescription.publications ? `
+                        <div class="mb-3">
+                            <h6>Publications:</h6>
+                            <p class="text-justify">${assessment.jobDescription.publications}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <!-- Supporting Documents -->
+                ${assessment.supportingDocument ? `
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-paperclip me-2"></i>Supporting Documents</h6>
+                    </div>
+                    <div class="card-body">
+                        <a href="/api/download/${assessment.supportingDocument}" class="btn btn-outline-primary">
+                            <i class="fas fa-download me-2"></i>Download Supporting Document
+                        </a>
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- HOD Evaluation -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>HOD Evaluation</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Evaluated by:</strong> ${assessment.hodEvaluation.evaluatedBy}</p>
+                                <p><strong>Evaluation Date:</strong> ${new Date(assessment.hodEvaluation.evaluatedAt).toLocaleDateString()}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Total Score:</strong> ${assessment.hodEvaluation.totalScore || 'N/A'}%</p>
+                                <p><strong>Recommendation:</strong> ${assessment.hodEvaluation.recommendation || 'N/A'}</p>
+                            </div>
+                        </div>
+                        ${assessment.hodEvaluation.comments ? `
+                        <div class="mt-3">
+                            <h6>HOD Comments:</h6>
+                            <p class="text-justify">${assessment.hodEvaluation.comments}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <!-- Committee Review (if exists) -->
+                ${assessment.committeeReview ? `
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="mb-0"><i class="fas fa-gavel me-2"></i>Committee Review</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Reviewed by:</strong> ${assessment.committeeReview.reviewedBy}</p>
+                                <p><strong>Review Date:</strong> ${new Date(assessment.committeeReview.reviewedAt).toLocaleDateString()}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Final Recommendation:</strong> 
+                                    <span class="badge bg-${getRecommendationColor(assessment.committeeReview.recommendation)}">
+                                        ${formatRecommendation(assessment.committeeReview.recommendation)}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        ${assessment.committeeReview.comments ? `
+                        <div class="mt-3">
+                            <h6>Committee Comments:</h6>
+                            <p class="text-justify">${assessment.committeeReview.comments}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+
+        // Generate all staff assessments overview HTML
+        function generateAllStaffHTML(assessments) {
+            if (assessments.length === 0) {
+                return `
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No staff assessments available.</p>
+                    </div>
+                `;
+            }
+
+            // Group assessments by department
+            const byDepartment = assessments.reduce((acc, assessment) => {
+                if (!acc[assessment.department]) {
+                    acc[assessment.department] = [];
+                }
+                acc[assessment.department].push(assessment);
+                return acc;
+            }, {});
+
+            return Object.entries(byDepartment).map(([department, deptAssessments]) => `
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-building me-2"></i>Department of ${department}
+                            <span class="badge bg-light text-dark ms-2">${deptAssessments.length} Staff</span>
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Staff Name</th>
+                                        <th>Grade Level</th>
+                                        <th>Present Status</th>
+                                        <th>Latest Qualification</th>
+                                        <th>HOD Score</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${deptAssessments.map(assessment => `
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-user-circle text-muted me-2"></i>
+                                                    <div>
+                                                        <div class="fw-semibold">${assessment.staffName}</div>
+                                                        <small class="text-muted">${assessment.personalInfo.employeeName || 'N/A'}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">${assessment.employmentDetails.currentGrade || 'N/A'}</span>
+                                                <br><small class="text-muted">${assessment.employmentDetails.contissLevel || ''}</small>
+                                            </td>
+                                            <td>${assessment.employmentDetails.presentStatus || 'N/A'}</td>
+                                            <td>
+                                                ${assessment.latestQualification ? 
+                                                    `${assessment.latestQualification.qualification} (${assessment.latestQualification.toYear})` 
+                                                    : 'N/A'}
+                                            </td>
+                                            <td>
+                                                ${assessment.hodEvaluation ? 
+                                                    `<span class="badge bg-success">${assessment.hodEvaluation.totalScore || 0}%</span>`
+                                                    : '<span class="badge bg-secondary">Pending</span>'
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-${getStatusColor(assessment.status)}">
+                                                    ${formatStatus(assessment.status)}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="viewCompleteAssessment(${assessment.id})" title="View Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    ${assessment.status === 'hod_evaluated' ? 
+                                                        `<button class="btn btn-sm btn-outline-success" onclick="reviewAppraisal(${assessment.id})" title="Review">
+                                                            <i class="fas fa-gavel"></i>
+                                                        </button>`
+                                                        : ''
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper functions for recommendations
+        function getRecommendationColor(recommendation) {
+            const colors = {
+                'promotion': 'success',
+                'confirmation': 'success',
+                'commendation': 'info',
+                'normal_increment': 'primary',
+                'training': 'warning',
+                'warning': 'warning',
+                'sanction': 'danger',
+                'deferred_increment': 'warning',
+                'withholding_increment': 'danger',
+                'termination': 'danger',
+                'dismissal': 'danger'
+            };
+            return colors[recommendation] || 'secondary';
+        }
+
+        function formatRecommendation(recommendation) {
+            return recommendation.split('_').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        // Helper functions for status
+        function getStatusColor(status) {
+            const colors = {
+                'submitted': 'info',
+                'hod_evaluated': 'warning',
+                'completed': 'success'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function formatStatus(status) {
+            const formats = {
+                'submitted': 'Pending HOD Review',
+                'hod_evaluated': 'Pending Committee Review',
+                'completed': 'Completed'
+            };
+            return formats[status] || status;
+        }
+
+        // Navigation functions
+        function goToReview() {
+            if (currentAssessmentId) {
+                window.location.href = `/committee-review.html?id=${currentAssessmentId}`;
+            }
+        }
+
+        function reviewAppraisal(id) {
+            window.location.href = `/committee-review.html?id=${id}`;
+        }
+
+        // Quick action functions
+        function generateReports() {
+            // Placeholder for report generation
+            alert('Report generation feature coming soon!');
+        }
+
+        function exportData() {
+            // Placeholder for data export
+            alert('Data export feature coming soon!');
+        }
+
+        // Set current date and load data
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('currentDate').textContent = currentDate;
+
+            // Load appraisals
+            loadCommitteeAppraisals();
+        });
+
+        // Make functions globally available
+        window.viewCompleteAssessment = viewCompleteAssessment;
+        window.viewAllStaffAssessments = viewAllStaffAssessments;
+        window.filterReviews = filterReviews;
+        window.goToReview = goToReview;
+        window.reviewAppraisal = reviewAppraisal;
+        window.generateReports = generateReports;
+        window.exportData = exportData;
+    </script>
+</body>
+</html>
