@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Review Panel - E-Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/faculty-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/faculty-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/faculty-profile.html">
+                            <i class="fas fa-gavel me-1"></i>My Profile
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-users me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Faculty: <span id="userFaculty">Loading...</span>
+                            </h6></li>
+                            <li><h6 class="dropdown-header">
+                                Department: <span id="userDepartment">Loading...</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/faculty-profile.html">
+                                <i class="fas fa-user me-2"></i>My Profile
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="welcome-card card">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h2 class="fw-bold text-warning mb-2">
+                                        Welcome, <span id="userNameWelcome">Faculty Review Panel</span>!
+                                    </h2>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        Today is <span id="currentDate"></span>
+                                    </p>
+                                    <p class="text-muted">
+                                        <i class="fas fa-gavel me-2"></i>
+                                        Review and make final recommendations on staff appraisals
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <i class="fas fa-users fa-5x text-warning opacity-75"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card border-primary">
+                        <div class="card-body text-center">
+                            <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
+                            <h3 class="fw-bold text-primary" id="totalAppraisals">0</h3>
+                            <p class="text-muted mb-0">Total Appraisals</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-warning">
+                        <div class="card-body text-center">
+                            <i class="fas fa-hourglass-half fa-3x text-warning mb-3"></i>
+                            <h3 class="fw-bold text-warning" id="pendingReviews">0</h3>
+                            <p class="text-muted mb-0">Pending Reviews</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <i class="fas fa-check-double fa-3x text-success mb-3"></i>
+                            <h3 class="fw-bold text-success" id="completedReviews">0</h3>
+                            <p class="text-muted mb-0">Completed Reviews</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-info">
+                        <div class="card-body text-center">
+                            <i class="fas fa-star fa-3x text-info mb-3"></i>
+                            <h3 class="fw-bold text-info" id="recommendedPromotions">0</h3>
+                            <p class="text-muted mb-0">Recommended Promotions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list-alt me-2"></i>Appraisals for Faculty Review
+                            </h5>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-warning btn-sm active" onclick="filterReviews('all')">All</button>
+                                <button class="btn btn-outline-primary btn-sm" onclick="filterReviews('pending')">Pending</button>
+                                <button class="btn btn-outline-success btn-sm" onclick="filterReviews('completed')">Completed</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="committeeAppraisals">
+                                <div class="col-12 text-center py-5">
+                                    <div class="spinner-border text-warning" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted mt-3">Loading appraisals for faculty review...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-history me-2"></i>Recent Faculty Decisions
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Staff Name</th>
+                                            <th>Department</th>
+                                            <th>HOD Score</th>
+                                            <th>Decision</th>
+                                            <th>Date Reviewed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentDecisions">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No recent decisions available</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Assessment Detail Modal -->
+    <div class="modal fade" id="staffAssessmentModal" tabindex="-1" aria-labelledby="staffAssessmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staffAssessmentModalLabel">
+                        <i class="fas fa-user-circle me-2"></i>Complete Staff Assessment Details
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="assessmentContent">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted mt-3">Loading staff assessment details...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="reviewBtn" onclick="goToReview()" style="display: none;">
+                        <i class="fas fa-gavel me-2"></i>Review Staff
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        let currentAssessmentId = null;
+
+        function filterReviews(status) {
+            const buttons = document.querySelectorAll('.btn-group button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            const cards = document.querySelectorAll('#committeeAppraisals .col-md-6');
+            cards.forEach(card => {
+                if (status === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const statusBadge = card.querySelector('.badge');
+                    const cardStatus = statusBadge ? statusBadge.textContent.toLowerCase() : '';
+                    if (status === 'pending' && cardStatus.includes('pending')) {
+                        card.style.display = 'block';
+                    } else if (status === 'completed' && cardStatus.includes('completed')) {
+                        card.style.display = 'block';
+                    } else if (status !== 'all') {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function updateCommitteeStatistics(appraisals) {
+            const totalAppraisals = appraisals.length;
+            const pendingStatuses = ['pending_faculty_panel', 'pending_faculty_review'];
+            const pendingReviews = appraisals.filter(a => pendingStatuses.includes(a.status)).length;
+            const completedReviews = appraisals.filter(a => a.status === 'reviewed_by_committee').length;
+            const recommendedPromotions = appraisals.filter(a => 
+                a.committeeReview && 
+                (a.committeeReview.recommendation === 'promotion' || a.committeeReview.recommendation === 'confirmation')
+            ).length;
+            document.getElementById('totalAppraisals').textContent = totalAppraisals;
+            document.getElementById('pendingReviews').textContent = pendingReviews;
+            document.getElementById('completedReviews').textContent = completedReviews;
+            document.getElementById('recommendedPromotions').textContent = recommendedPromotions;
+        }
+
+        async function loadCommitteeAppraisals() {
+            const container = document.getElementById('committeeAppraisals');
+            if (!container) return;
+            try {
+                const response = await fetch('/api/faculty/appraisals');
+                
+                // Check if response is ok before parsing JSON
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API Error:', response.status, errorText);
+                    throw new Error(`HTTP ${response.status}: Failed to fetch appraisals`);
+                }
+                
+                const appraisals = await response.json();
+                
+                // Handle error responses from API
+                if (!Array.isArray(appraisals)) {
+                    console.error('Invalid response format:', appraisals);
+                    throw new Error(appraisals.message || 'Invalid response from server');
+                }
+                
+                updateCommitteeStatistics(appraisals);
+                loadRecentDecisions(appraisals);
+                if (appraisals.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No appraisals pending faculty review.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                container.innerHTML = appraisals.map(appraisal => {
+                    // Get appraisal ID - handle both _id and id fields
+                    const appraisalId = appraisal._id || appraisal.id;
+                    
+                    // Safely access hodEvaluation with null checks
+                    const hodEvaluation = appraisal.hodEvaluation || {};
+                    const hodEvaluatedDate = hodEvaluation.evaluatedAt ? 
+                        new Date(hodEvaluation.evaluatedAt).toLocaleDateString() : 'N/A';
+                    const hodEvaluatedBy = hodEvaluation.evaluatedBy || 'N/A';
+                    const hodRecommendation = hodEvaluation.recommendation || null;
+                    
+                    // Safely access appraisal data
+                    const appraisalData = appraisal.data || {};
+                    const employeeName = appraisalData.employeeName || null;
+                    const currentGrade = appraisalData.currentGrade || 'N/A';
+                    const presentStatus = appraisalData.presentStatus || 'N/A';
+                    
+                    return `
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">${appraisal.staffName || 'N/A'}</h5>
+                                <span class="badge bg-${getStatusColor(appraisal.status)}">${formatStatus(appraisal.status)}</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">Faculty</small>
+                                        <p class="mb-0 fw-semibold">${appraisal.faculty || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Department</small>
+                                        <p class="mb-0 fw-semibold">${appraisal.department || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">HOD Evaluated</small>
+                                        <p class="mb-0 fw-semibold">${hodEvaluatedDate}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Evaluated By</small>
+                                        <p class="mb-0">${hodEvaluatedBy}</p>
+                                    </div>
+                                </div>
+                                ${employeeName ? `
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">Employee Name</small>
+                                        <p class="mb-0">${employeeName}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Current Grade</small>
+                                        <p class="mb-0">${currentGrade}</p>
+                                    </div>
+                                </div>
+                                ` : ''}
+                                <div class="mb-3">
+                                    <small class="text-muted">Present Status</small>
+                                    <p class="mb-0">${presentStatus}</p>
+                                </div>
+                                ${hodRecommendation ? `
+                                <div class="mb-3">
+                                    <small class="text-muted">HOD Recommendation</small>
+                                    <p class="mb-0">
+                                        <span class="badge bg-info">${hodRecommendation}</span>
+                                    </p>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary btn-sm flex-fill" onclick="viewCompleteAssessment('${appraisalId}')">
+                                        <i class="fas fa-eye me-1"></i>View Complete Details
+                                    </button>
+                                    ${['pending_faculty_panel', 'pending_faculty_review'].includes(appraisal.status) ? 
+                                        `<button class="btn btn-success btn-sm" onclick="reviewAppraisal('${appraisalId}')">
+                                            <i class="fas fa-gavel me-1"></i>Review
+                                        </button>` : ''
+                                    }
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteAppraisal('${appraisalId}')">
+                                        <i class="fas fa-trash-alt me-1"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading appraisals:', error);
+                container.innerHTML = '<div class="col-12"><div class="alert alert-danger">A critical error occurred while loading appraisals. Please check the console.</div></div>';
+            }
+        }
+
+        function loadRecentDecisions(appraisals) {
+            const completedAppraisals = appraisals
+                .filter(a => a.status === 'reviewed_by_committee' && a.committeeReview)
+                .sort((a, b) => {
+                    const dateA = a.committeeReview?.reviewedAt ? new Date(a.committeeReview.reviewedAt) : new Date(0);
+                    const dateB = b.committeeReview?.reviewedAt ? new Date(b.committeeReview.reviewedAt) : new Date(0);
+                    return dateB - dateA;
+                })
+                .slice(0, 5);
+            const tbody = document.getElementById('recentDecisions');
+            if (completedAppraisals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent decisions available</td></tr>';
+                return;
+            }
+            tbody.innerHTML = completedAppraisals.map(appraisal => {
+                const hodEvaluation = appraisal.hodEvaluation || {};
+                const committeeReview = appraisal.committeeReview || {};
+                const hodTotalScore = hodEvaluation.totalScore || 'N/A';
+                const reviewedDate = committeeReview.reviewedAt ? 
+                    new Date(committeeReview.reviewedAt).toLocaleDateString() : 'N/A';
+                
+                return `
+                <tr>
+                    <td>${appraisal.staffName || 'N/A'}</td>
+                    <td>${appraisal.department || 'N/A'}</td>
+                    <td>${hodTotalScore}%</td>
+                    <td>
+                        <span class="badge bg-${getRecommendationColor(committeeReview.recommendation)}">
+                            ${formatRecommendation(committeeReview.recommendation)}
+                        </span>
+                    </td>
+                    <td>${reviewedDate}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        async function viewCompleteAssessment(assessmentId) {
+            currentAssessmentId = assessmentId;
+            const modal = new bootstrap.Modal(document.getElementById('staffAssessmentModal'));
+            const content = document.getElementById('assessmentContent');
+            const reviewBtn = document.getElementById('reviewBtn');
+            content.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-3">Loading staff assessment details...</p>
+                </div>
+            `;
+            modal.show();
+            try {
+                const response = await fetch(`/api/faculty/appraisals/${assessmentId}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API Error:', response.status, errorText);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const assessment = await response.json();
+                
+                // Ensure assessment has safe defaults
+                if (!assessment) {
+                    throw new Error('No appraisal data returned');
+                }
+                
+                if (['pending_faculty_panel', 'pending_faculty_review'].includes(assessment.status)) {
+                    if (reviewBtn) reviewBtn.style.display = 'inline-block';
+                } else {
+                    if (reviewBtn) reviewBtn.style.display = 'none';
+                }
+                
+                // Ensure generateCompleteAssessmentHTML is available
+                if (typeof generateCompleteAssessmentHTML === 'function') {
+                    content.innerHTML = generateCompleteAssessmentHTML(assessment, true);
+                } else {
+                    console.error('generateCompleteAssessmentHTML function not found');
+                    content.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error: Assessment display function not available.
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading assessment details:', error);
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error Loading Assessment Details: ${error.message || 'Unknown error'}. Please try again.
+                    </div>
+                `;
+            }
+        }
+
+        function goToReview() {
+            if (currentAssessmentId) {
+                window.location.href = `/committee-review.html?id=${currentAssessmentId}`;
+            }
+        }
+        function reviewAppraisal(id) {
+            window.location.href = `/committee-review.html?id=${id}`;
+        }
+
+        // Helper functions for status
+        function getStatusColor(status) {
+            const colors = {
+                'submitted_by_staff': 'info',
+                'evaluated_by_hod': 'warning',
+                'accepted_by_staff': 'warning',
+                'pending_committee_review': 'warning',
+                'pending_faculty_panel': 'primary',
+                'reviewed_by_committee': 'success',
+                'pending_faculty_review': 'primary',
+                'rejected_by_staff': 'danger'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function formatStatus(status) {
+            const formats = {
+                'submitted': 'Pending HOD Review',
+                'submitted_by_staff': 'Pending HOD Review',
+                'evaluated_by_hod': 'Awaiting Staff Review',
+                'hod_evaluated': 'Pending Committee Review',
+                'pending_committee_review': 'Pending Committee Review',
+                'accepted_by_staff': 'Accepted by Staff',
+                'pending_faculty_panel': 'Pending Faculty Review',
+                'pending_faculty_review': 'Pending Faculty Review',
+                'reviewed_by_committee': 'Committee Reviewed',
+                'completed': 'Completed'
+            };
+            return formats[status] || status;
+        }
+
+        // Helper functions for recommendations
+        function getRecommendationColor(recommendation) {
+            if (!recommendation) return 'secondary';
+            const colors = {
+                'promotion': 'success',
+                'confirmation': 'success',
+                'commendation': 'info',
+                'normal_increment': 'primary',
+                'training': 'warning',
+                'warning': 'warning',
+                'sanction': 'danger',
+                'deferred_increment': 'warning',
+                'withholding_increment': 'danger',
+                'termination': 'danger',
+                'dismissal': 'danger'
+            };
+            return colors[recommendation] || 'secondary';
+        }
+
+        function formatRecommendation(recommendation) {
+            if (!recommendation) return 'N/A';
+            return recommendation.split('_').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        function confirmDeleteAppraisal(appraisalId) {
+            if (confirm('Are you sure you want to delete this appraisal? This action cannot be undone.')) {
+                deleteAppraisal(appraisalId);
+            }
+        }
+
+        async function deleteAppraisal(appraisalId) {
+            try {
+                const response = await fetch(`/api/faculty/appraisals/${appraisalId}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Appraisal deleted successfully');
+                    loadCommitteeAppraisals();
+                } else {
+                    alert('Error deleting appraisal: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error deleting appraisal:', error);
+                alert('Error deleting appraisal. Please try again.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('currentDate').textContent = currentDate;
+            loadCommitteeAppraisals();
+        });
+    </script>
+</body>
+</html>
+

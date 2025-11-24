@@ -193,29 +193,59 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addQualification()">
+                        <button type="button" class="btn btn-outline-primary btn-sm add-section-btn" onclick="addQualification()">
                             <i class="fas fa-plus me-2"></i>Add Qualification
                         </button>
                     </div>
                 </div>
 
-                <!-- Section D: Professional Bodies -->
+                <!-- Section D: Professional Bodies (Updated with Dynamic Functionality) -->
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-certificate me-2"></i>Professional Bodies
                         </h5>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="addProfessionalBody()">
+                            <i class="fas fa-plus me-2"></i>Add Professional Body
+                        </button>
                     </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="professionalBody" class="form-label">Professional Body/Society</label>
-                                <input type="text" class="form-control" id="professionalBody" name="professionalBody" placeholder="e.g., Institute of Chartered Accountants">
+                        <div id="professionalBodiesContainer">
+                            <div class="professional-body-item dynamic-section">
+                                <button type="button" class="btn btn-danger btn-sm remove-btn" onclick="removeProfessionalBody(this)" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Professional Body/Society</label>
+                                        <input type="text" class="form-control" name="professionalBody[]" placeholder="e.g., Institute of Chartered Accountants">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Date of Award/Membership</label>
+                                        <input type="date" class="form-control" name="membershipDate[]">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Membership Number</label>
+                                        <input type="text" class="form-control" name="membershipNumber[]" placeholder="Membership ID/Number">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Current Status</label>
+                                        <select class="form-select" name="membershipStatus[]">
+                                            <option value="">Select Status</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                            <option value="Lapsed">Lapsed</option>
+                                            <option value="Fellow">Fellow</option>
+                                            <option value="Associate">Associate</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="membershipDate" class="form-label">Date of Award/Membership</label>
-                                <input type="date" class="form-control" id="membershipDate" name="membershipDate">
-                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-primary add-section-btn" onclick="addProfessionalBody()">
+                                <i class="fas fa-plus me-2"></i>Add Another Professional Body
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -252,7 +282,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addServiceRecord()">
+                        <button type="button" class="btn btn-outline-primary btn-sm add-section-btn" onclick="addServiceRecord()">
                             <i class="fas fa-plus me-2"></i>Add Service Record
                         </button>
                     </div>
@@ -290,7 +320,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addTraining()">
+                        <button type="button" class="btn btn-outline-primary btn-sm add-section-btn" onclick="addTraining()">
                             <i class="fas fa-plus me-2"></i>Add Training
                         </button>
                     </div>
@@ -349,20 +379,60 @@
                     </div>
                 </div>
 
-                <!-- Section J: Supporting Documents -->
+                <!-- Section J: Supporting Documents (Updated with Dynamic Functionality) -->
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-paperclip me-2"></i>Supporting Documents
                         </h5>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="addSupportingDocument()">
+                            <i class="fas fa-plus me-2"></i>Add Document
+                        </button>
                     </div>
                     <div class="card-body">
-                        <div class="file-upload-area" id="fileUploadArea">
-                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
-                            <h5>Upload Supporting Document</h5>
-                            <p class="text-muted">Click here or drag and drop your file</p>
-                            <p class="text-muted small">Maximum file size: 10MB. Supported formats: PDF, DOC, DOCX, JPG, PNG</p>
-                            <input type="file" class="form-control" id="supportingDocument" name="supportingDocument" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+                        <div id="supportingDocumentsContainer">
+                            <div class="supporting-document-item dynamic-section">
+                                <button type="button" class="btn btn-danger btn-sm remove-btn" onclick="removeSupportingDocument(this)" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Document Title</label>
+                                        <input type="text" class="form-control" name="documentTitle[]" placeholder="e.g., Academic Certificates">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Select File</label>
+                                        <input type="file" class="form-control" name="supportingDocument[]" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-info btn-sm w-100" onclick="previewDocument(this)">
+                                            <i class="fas fa-eye me-1"></i>Preview
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Maximum file size: 10MB. Supported formats: PDF, DOC, DOCX, JPG, PNG
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-primary add-section-btn" onclick="addSupportingDocument()">
+                                <i class="fas fa-plus me-2"></i>Add Another Document
+                            </button>
+                        </div>
+                        
+                        <!-- Alternative Upload Area -->
+                        <div class="mt-4">
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                <h5>Drag & Drop Additional Files</h5>
+                                <p class="text-muted">Or click here to browse files</p>
+                                <p class="text-muted small">You can upload multiple files at once</p>
+                                <input type="file" class="form-control" id="bulkUpload" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -408,6 +478,146 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js"></script>
     <script>
+        // Counter for unique IDs
+        let professionalBodyCounter = 1;
+        let supportingDocumentCounter = 1;
+        
+        // Professional Bodies Functions
+        function addProfessionalBody() {
+            const container = document.getElementById('professionalBodiesContainer');
+            const newItem = document.createElement('div');
+            newItem.className = 'professional-body-item dynamic-section';
+            newItem.innerHTML = `
+                <button type="button" class="btn btn-danger btn-sm remove-btn" onclick="removeProfessionalBody(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Professional Body/Society</label>
+                        <input type="text" class="form-control" name="professionalBody[]" placeholder="e.g., Institute of Chartered Accountants">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Award/Membership</label>
+                        <input type="date" class="form-control" name="membershipDate[]">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Membership Number</label>
+                        <input type="text" class="form-control" name="membershipNumber[]" placeholder="Membership ID/Number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Current Status</label>
+                        <select class="form-select" name="membershipStatus[]">
+                            <option value="">Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Lapsed">Lapsed</option>
+                            <option value="Fellow">Fellow</option>
+                            <option value="Associate">Associate</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newItem);
+            professionalBodyCounter++;
+            updateRemoveButtons('professional-body-item');
+        }
+
+        function removeProfessionalBody(button) {
+            button.closest('.professional-body-item').remove();
+            updateRemoveButtons('professional-body-item');
+        }
+
+        // Supporting Documents Functions
+        function addSupportingDocument() {
+            const container = document.getElementById('supportingDocumentsContainer');
+            const newItem = document.createElement('div');
+            newItem.className = 'supporting-document-item dynamic-section';
+            newItem.innerHTML = `
+                <button type="button" class="btn btn-danger btn-sm remove-btn" onclick="removeSupportingDocument(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Document Title</label>
+                        <input type="text" class="form-control" name="documentTitle[]" placeholder="e.g., Academic Certificates">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Select File</label>
+                        <input type="file" class="form-control" name="supportingDocument[]" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-info btn-sm w-100" onclick="previewDocument(this)">
+                            <i class="fas fa-eye me-1"></i>Preview
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Maximum file size: 10MB. Supported formats: PDF, DOC, DOCX, JPG, PNG
+                    </small>
+                </div>
+            `;
+            container.appendChild(newItem);
+            supportingDocumentCounter++;
+            updateRemoveButtons('supporting-document-item');
+        }
+
+        function removeSupportingDocument(button) {
+            button.closest('.supporting-document-item').remove();
+            updateRemoveButtons('supporting-document-item');
+        }
+
+        function previewDocument(button) {
+            const fileInput = button.closest('.supporting-document-item').querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Create a modal or preview window
+                        const modal = document.createElement('div');
+                        modal.className = 'modal fade';
+                        modal.innerHTML = `
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Document Preview: ${file.name}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="${e.target.result}" class="img-fluid" alt="Document Preview">
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        const bootstrapModal = new bootstrap.Modal(modal);
+                        bootstrapModal.show();
+                        modal.addEventListener('hidden.bs.modal', () => modal.remove());
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Preview is only available for image files. File selected: ' + file.name);
+                }
+            } else {
+                alert('Please select a file first.');
+            }
+        }
+
+        // Utility function to update remove button visibility
+        function updateRemoveButtons(className) {
+            const items = document.querySelectorAll('.' + className);
+            items.forEach((item, index) => {
+                const removeBtn = item.querySelector('.remove-btn');
+                if (removeBtn) {
+                    removeBtn.style.display = items.length > 1 ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Existing functions
         function addQualification() {
             const container = document.getElementById('qualificationsContainer');
             const qualificationItem = document.createElement('div');
@@ -519,6 +729,65 @@
 
         function removeTraining(button) {
             button.closest('.training-item').remove();
+        }
+
+        // Initialize remove button visibility on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRemoveButtons('professional-body-item');
+            updateRemoveButtons('supporting-document-item');
+            
+            // Setup bulk file upload
+            const bulkUpload = document.getElementById('bulkUpload');
+            const uploadArea = document.getElementById('fileUploadArea');
+            
+            uploadArea.addEventListener('click', () => bulkUpload.click());
+            
+            bulkUpload.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach((file, index) => {
+                    if (index > 0) addSupportingDocument(); // Add new sections for additional files
+                    
+                    const items = document.querySelectorAll('.supporting-document-item');
+                    const currentItem = items[items.length - files.length + index];
+                    const fileInput = currentItem.querySelector('input[type="file"]');
+                    const titleInput = currentItem.querySelector('input[name="documentTitle[]"]');
+                    
+                    // Create a new FileList with just this file
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    fileInput.files = dt.files;
+                    
+                    // Auto-fill title if empty
+                    if (!titleInput.value) {
+                        titleInput.value = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
+                    }
+                });
+                
+                // Show success message
+                uploadArea.innerHTML = `
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5 class="text-success">Files Added Successfully!</h5>
+                    <p class="text-muted">${files.length} file(s) have been added to the supporting documents section</p>
+                    <button type="button" class="btn btn-outline-primary mt-2" onclick="resetUploadArea()">
+                        <i class="fas fa-plus me-2"></i>Add More Files
+                    </button>
+                `;
+            });
+        });
+        
+        function resetUploadArea() {
+            const uploadArea = document.getElementById('fileUploadArea');
+            uploadArea.innerHTML = `
+                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                <h5>Drag & Drop Additional Files</h5>
+                <p class="text-muted">Or click here to browse files</p>
+                <p class="text-muted small">You can upload multiple files at once</p>
+                <input type="file" class="form-control" id="bulkUpload" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+            `;
+            
+            // Re-attach event listeners
+            const bulkUpload = document.getElementById('bulkUpload');
+            uploadArea.addEventListener('click', () => bulkUpload.click());
         }
     </script>
 </body>

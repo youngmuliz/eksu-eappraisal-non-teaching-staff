@@ -36,7 +36,7 @@ const upload = multer({ storage: storage });
 // In-memory data storage
 let users = {
     staff: [
-        { id: 1, username: 'staff1', password: bcrypt.hashSync('staff123', 10), name: 'Isharufe Timothy Doe', role: 'staff', department: 'Computer Science' },
+        { id: 1, username: 'staff1', password: bcrypt.hashSync('staff123', 10), name: 'Isharufe Timothy', role: 'staff', department: 'Computer Science' },
         { id: 2, username: 'staff2', password: bcrypt.hashSync('staff123', 10), name: 'Isharufe Timothy', role: 'staff', department: 'Mathematics' }
     ],
     hod: [

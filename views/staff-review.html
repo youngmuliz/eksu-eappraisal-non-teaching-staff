@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Head of Department's Evaluation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/staff-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/staff-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/staff-form.html">
+                            <i class="fas fa-edit me-1"></i>New Appraisal
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">
+                                Role: <span id="userRole" class="badge bg-primary">Staff</span>
+                            </h6></li>
+                            <li><h6 class="dropdown-header">
+                                Department: <span id="userDepartment">Loading...</span>
+                            </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="mb-0">Review Head of Department's Evaluation</h3>
+                        </div>
+                        <div class="card-body" id="evaluation-details">
+                            <!-- Evaluation details will be loaded here -->
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="text-muted mt-3">Loading evaluation details...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">Your Response</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="review-form">
+                                <div class="mb-3">
+                                    <label for="staff-comments" class="form-label">Your Comments</label>
+                                    <textarea class="form-control" id="staff-comments" rows="5" placeholder="I certify that I have read the comments of this report and wish to add the following comments..."></textarea>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-danger me-2" onclick="submitReview('rejected')">
+                                        <i class="fas fa-times-circle me-2"></i>Reject Evaluation
+                                    </button>
+                                    <button type="button" class="btn btn-success" onclick="submitReview('accepted')">
+                                        <i class="fas fa-check-circle me-2"></i>Accept Evaluation
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Ekiti State University - E-Appraisal System</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast container for notifications -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toast-title">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-body">
+                Your review has been submitted.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadUserInfo();
+            const urlParams = new URLSearchParams(window.location.search);
+            const appraisalId = urlParams.get('id');
+
+            if (!appraisalId) {
+                document.getElementById('evaluation-details').innerHTML = '<div class="alert alert-danger">No appraisal ID provided. Please go back to your dashboard.</div>';
+                return;
+            }
+
+            loadEvaluationDetails(appraisalId);
+        });
+
+        async function loadEvaluationDetails(appraisalId) {
+            try {
+                const response = await fetch(`/api/staff/evaluation/${appraisalId}`);
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    const errorMessage = result.message || 'Could not load evaluation details. Please try again later.';
+                    document.getElementById('evaluation-details').innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`;
+                    document.getElementById('review-form').style.display = 'none';
+                    return;
+                }
+
+                const evaluationDetails = document.getElementById('evaluation-details');
+                const hodEvaluation = result.hodEvaluation;
+                const personalityEvaluation = result.personalityTraitsEvaluation;
+
+                if (!hodEvaluation && !personalityEvaluation) {
+                    evaluationDetails.innerHTML = '<div class="alert alert-warning">No evaluation data is available for review at this time.</div>';
+                    document.getElementById('review-form').style.display = 'none';
+                    return;
+                }
+
+                let html = `<h5>HOD Evaluation for ${result.staffName}</h5>`;
+
+                if (hodEvaluation) {
+                    html += `<p><strong>Evaluation Date:</strong> ${new Date(hodEvaluation.evaluatedAt).toLocaleDateString()}</p>`;
+                    html += `<p><strong>Evaluated by:</strong> ${hodEvaluation.evaluatedBy}</p>`;
+                    html += '<h6>Staff Form Assessment</h6>';
+                    html += `<p><strong>Comments on Performance:</strong> ${hodEvaluation.performanceComments || 'N/A'}</p>`;
+                    html += `<p><strong>Recommendation:</strong> ${hodEvaluation.recommendation || 'N/A'}</p>`;
+                } else {
+                    html += '<div class="alert alert-secondary">No staff form evaluation found.</div>';
+                }
+
+                if (personalityEvaluation) {
+                    html += '<h6 class="mt-4">Personality Traits Assessment</h6>';
+                    html += `<p><strong>Overall Score:</strong> ${personalityEvaluation.totalScore}/${personalityEvaluation.maxScore} (${personalityEvaluation.percentage}%)</p>`;
+                    html += `<p><strong>Performance Rating:</strong> <span class="badge bg-info">${personalityEvaluation.performanceRating}</span></p>`;
+                    html += `<p><strong>HOD\'s Overall Comments:</strong> ${personalityEvaluation.overallComments || 'N/A'}</p>`;
+                } else {
+                    html += '<div class="alert alert-secondary mt-4">No personality traits evaluation found.</div>';
+                }
+
+                evaluationDetails.innerHTML = html;
+
+            } catch (error) {
+                console.error('Failed to load evaluation details:', error);
+                document.getElementById('evaluation-details').innerHTML = '<div class="alert alert-danger">A network error occurred. Please check your connection and try again.</div>';
+                document.getElementById('review-form').style.display = 'none';
+            }
+        }
+
+        async function submitReview(decision) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const appraisalId = urlParams.get('id');
+            const comments = document.getElementById('staff-comments').value;
+
+            const response = await fetch(`/api/staff/review-evaluation/${appraisalId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ decision, comments })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showToast(decision === 'accepted' ? 'Evaluation Accepted' : 'Evaluation Rejected', result.message, decision === 'accepted' ? 'success' : 'danger');
+                setTimeout(() => {
+                    window.location.href = '/staff-dashboard.html';
+                }, 3000); // Redirect after 3 seconds
+            } else {
+                showToast('Error', result.message, 'danger');
+            }
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toastEl = document.getElementById('notificationToast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastBody = document.getElementById('toast-body');
+            const toastHeader = toastEl.querySelector('.toast-header');
+
+            toastTitle.textContent = title;
+            toastBody.textContent = message;
+
+            // Reset classes
+            toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'text-white');
+            toastHeader.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'text-white');
+
+            if (type === 'success') {
+                toastHeader.classList.add('bg-success', 'text-white');
+            } else if (type === 'danger') {
+                toastHeader.classList.add('bg-danger', 'text-white');
+            }
+
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    </script>
+</body>
+</html>

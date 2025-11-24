@@ -76,40 +76,6 @@
                             </form>
                         </div>
                     </div>
-                    
-                    <!-- Demo Credentials Card -->
-                    <div class="card mt-4">
-                        <div class="card-header bg-info text-white">
-                            <h6 class="mb-0">
-                                <i class="fas fa-info-circle me-2"></i>Demo Credentials
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="demo-credential">
-                                        <h6 class="fw-bold text-primary mb-2">Staff</h6>
-                                        <p class="mb-1 small">Username: <code>staff1</code></p>
-                                        <p class="mb-0 small">Password: <code>staff123</code></p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="demo-credential">
-                                        <h6 class="fw-bold text-success mb-2">HOD</h6>
-                                        <p class="mb-1 small">Username: <code>hod1</code></p>
-                                        <p class="mb-0 small">Password: <code>hod123</code></p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="demo-credential">
-                                        <h6 class="fw-bold text-warning mb-2">Committee</h6>
-                                        <p class="mb-1 small">Username: <code>committee1</code></p>
-                                        <p class="mb-0 small">Password: <code>committee123</code></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -132,28 +98,6 @@
                 toggleIcon.classList.add('fa-eye');
             }
         }
-
-        // Quick fill demo credentials
-        function fillCredentials(role, username, password) {
-            document.getElementById('role').value = role;
-            document.getElementById('username').value = username;
-            document.getElementById('password').value = password;
-        }
-
-        // Add click handlers for demo credentials
-        document.addEventListener('DOMContentLoaded', function() {
-            const demoCredentials = document.querySelectorAll('.demo-credential');
-            demoCredentials.forEach(credential => {
-                credential.style.cursor = 'pointer';
-                credential.addEventListener('click', function() {
-                    const role = this.querySelector('h6').textContent.toLowerCase();
-                    const username = this.querySelector('code').textContent;
-                    const password = this.querySelectorAll('code')[1].textContent;
-                    
-                    fillCredentials(role === 'hod' ? 'hod' : role === 'committee' ? 'committee' : 'staff', username, password);
-                });
-            });
-        });
     </script>
 </body>
 </html>

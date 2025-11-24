@@ -26,6 +26,11 @@
                             <i class="fas fa-tachometer-alt me-1"></i>Dashboard
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hod-profile.html">
+                            <i class="fas fa-user-tie me-1"></i>My Profile
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -38,8 +43,15 @@
                                 Role: <span id="userRole" class="badge bg-success">HOD</span>
                             </h6></li>
                             <li><h6 class="dropdown-header">
+                                Faculty: <span id="userFaculty">Loading...</span>
+                            </h6></li>
+                            <li><h6 class="dropdown-header">
                                 Department: <span id="userDepartment">Loading...</span>
                             </h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/hod-profile.html">
+                                <i class="fas fa-user me-2"></i>My Profile
+                            </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#" onclick="logout()">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout
@@ -67,6 +79,10 @@
                                     <p class="text-muted mb-0">
                                         <i class="fas fa-calendar-alt me-2"></i>
                                         Today is <span id="currentDate"></span>
+                                    </p>
+                                    <p class="text-muted">
+                                        <i class="fas fa-university me-2"></i>
+                                        Faculty of <span id="userFacultyWelcome">Loading...</span>
                                     </p>
                                     <p class="text-muted">
                                         <i class="fas fa-building me-2"></i>
@@ -194,482 +210,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js"></script>
     <script>
-        let currentAssessmentId = null;
-
-        // Filter appraisals by status
-        function filterAppraisals(status) {
-            const buttons = document.querySelectorAll('.btn-group button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            
-            const cards = document.querySelectorAll('#hodAppraisals .col-md-6');
-            cards.forEach(card => {
-                if (status === 'all') {
-                    card.style.display = 'block';
-                } else {
-                    const statusBadge = card.querySelector('.badge');
-                    const cardStatus = statusBadge ? statusBadge.textContent.toLowerCase() : '';
-                    
-                    if (status === 'pending' && cardStatus.includes('pending')) {
-                        card.style.display = 'block';
-                    } else if (status === 'completed' && cardStatus.includes('completed')) {
-                        card.style.display = 'block';
-                    } else if (status !== 'all') {
-                        card.style.display = 'none';
-                    }
-                }
-            });
-        }
-
-        // Update statistics based on loaded data
-        function updateStatistics(appraisals) {
-            const totalStaff = appraisals.length;
-            const pendingEvaluations = appraisals.filter(a => a.status === 'submitted').length;
-            const completedEvaluations = appraisals.filter(a => a.status === 'hod_evaluated').length;
-            
-            document.getElementById('totalStaff').textContent = totalStaff;
-            document.getElementById('pendingEvaluations').textContent = pendingEvaluations;
-            document.getElementById('completedEvaluations').textContent = completedEvaluations;
-            
-            // Calculate average score
-            const evaluatedAppraisals = appraisals.filter(a => a.hodEvaluation && a.hodEvaluation.totalScore);
-            const averageScore = evaluatedAppraisals.length > 0 
-                ? Math.round(evaluatedAppraisals.reduce((sum, a) => sum + a.hodEvaluation.totalScore, 0) / evaluatedAppraisals.length)
-                : 0;
-            document.getElementById('averageScore').textContent = averageScore + '%';
-        }
-
-        // Load HOD appraisals with detailed view option
-        async function loadHODAppraisals() {
-            const container = document.getElementById('hodAppraisals');
-            if (!container) return;
-            
-            try {
-                const response = await fetch('/api/hod/appraisals');
-                const appraisals = await response.json();
-                
-                // Update statistics
-                updateStatistics(appraisals);
-                
-                if (appraisals.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-12 text-center py-5">
-                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                            <p class="text-muted">No appraisals pending evaluation.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                container.innerHTML = appraisals.map(appraisal => `
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">${appraisal.staffName}</h5>
-                                <span class="badge bg-${getStatusColor(appraisal.status)}">${formatStatus(appraisal.status)}</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <small class="text-muted">Department</small>
-                                        <p class="mb-0 fw-semibold">${appraisal.department}</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Submitted</small>
-                                        <p class="mb-0 fw-semibold">${new Date(appraisal.submittedAt).toLocaleDateString()}</p>
-                                    </div>
-                                </div>
-                                
-                                ${appraisal.data.employeeName ? `
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <small class="text-muted">Employee Name</small>
-                                        <p class="mb-0">${appraisal.data.employeeName}</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Current Grade</small>
-                                        <p class="mb-0">${appraisal.data.currentGrade || 'N/A'}</p>
-                                    </div>
-                                </div>
-                                ` : ''}
-                                
-                                <div class="mb-3">
-                                    <small class="text-muted">Present Status</small>
-                                    <p class="mb-0">${appraisal.data.presentStatus || 'N/A'}</p>
-                                </div>
-                                
-                                ${appraisal.supportingDocument ? 
-                                    `<div class="mb-3">
-                                        <small class="text-muted">Supporting Document</small>
-                                        <p class="mb-0">
-                                            <a href="/api/download/${appraisal.supportingDocument}" class="btn btn-sm btn-outline-info">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </p>
-                                    </div>` : ''
-                                }
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-primary btn-sm flex-fill" onclick="viewCompleteAssessment(${appraisal.id})">
-                                        <i class="fas fa-eye me-1"></i>View Complete Details
-                                    </button>
-                                    ${appraisal.status === 'submitted' ? 
-                                        `<button class="btn btn-success btn-sm" onclick="evaluateAppraisal(${appraisal.id})">
-                                            <i class="fas fa-edit me-1"></i>Evaluate
-                                        </button>` : ''
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                container.innerHTML = '<div class="col-12"><div class="alert alert-danger">Error loading appraisals</div></div>';
-            }
-        }
-
-        // View complete staff assessment details
-        async function viewCompleteAssessment(assessmentId) {
-            currentAssessmentId = assessmentId;
-            
-            const modal = new bootstrap.Modal(document.getElementById('staffAssessmentModal'));
-            const content = document.getElementById('assessmentContent');
-            const evaluateBtn = document.getElementById('evaluateBtn');
-            
-            // Reset content
-            content.innerHTML = `
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="text-muted mt-3">Loading staff assessment details...</p>
-                </div>
-            `;
-            
-            modal.show();
-            
-            try {
-                const response = await fetch(`/api/hod/staff-assessment/${assessmentId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch assessment details');
-                }
-                
-                const assessment = await response.json();
-                
-                // Show/hide evaluate button based on status
-                if (assessment.status === 'submitted') {
-                    evaluateBtn.style.display = 'inline-block';
-                } else {
-                    evaluateBtn.style.display = 'none';
-                }
-                
-                content.innerHTML = generateAssessmentHTML(assessment);
-                
-            } catch (error) {
-                content.innerHTML = `
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Error loading assessment details. Please try again.
-                    </div>
-                `;
-            }
-        }
-
-        // Generate complete assessment HTML
-        function generateAssessmentHTML(assessment) {
-            return `
-                <!-- Staff Overview -->
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h6 class="mb-0"><i class="fas fa-user me-2"></i>Staff Overview</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Staff Name:</strong> ${assessment.staffName}</p>
-                                <p><strong>Department:</strong> ${assessment.department}</p>
-                                <p><strong>Submission Date:</strong> ${new Date(assessment.submittedAt).toLocaleDateString()}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Status:</strong> <span class="badge bg-${getStatusColor(assessment.status)}">${formatStatus(assessment.status)}</span></p>
-                                <p><strong>Current Grade:</strong> ${assessment.employmentDetails.currentGrade || 'N/A'}</p>
-                                <p><strong>CONTISS Level:</strong> ${assessment.employmentDetails.contissLevel || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Personal Information -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-user-circle me-2"></i>Personal Information</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Full Name:</strong> ${assessment.personalInfo.employeeName || 'N/A'}</p>
-                                <p><strong>Date of Birth:</strong> ${assessment.personalInfo.dateOfBirth || 'N/A'}</p>
-                                <p><strong>Place of Birth:</strong> ${assessment.personalInfo.placeOfBirth || 'N/A'}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Marital Status:</strong> ${assessment.personalInfo.maritalStatus || 'N/A'}</p>
-                                <p><strong>Number of Children:</strong> ${assessment.personalInfo.numberOfChildren || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Employment Details -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-briefcase me-2"></i>Employment Details</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Date of First Appointment:</strong> ${assessment.employmentDetails.firstAppointment || 'N/A'}</p>
-                                <p><strong>Confirmation Date:</strong> ${assessment.employmentDetails.confirmationDate || 'N/A'}</p>
-                                <p><strong>Present Status:</strong> ${assessment.employmentDetails.presentStatus || 'N/A'}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Nature of Appointment:</strong> ${assessment.employmentDetails.appointmentType || 'N/A'}</p>
-                                <p><strong>Current Grade Level:</strong> ${assessment.employmentDetails.currentGrade || 'N/A'}</p>
-                                <p><strong>CONTISS Level:</strong> ${assessment.employmentDetails.contissLevel || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Academic Qualifications -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Academic Qualifications</h6>
-                    </div>
-                    <div class="card-body">
-                        ${assessment.academicQualifications.length > 0 ? `
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Institution</th>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Qualification</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${assessment.academicQualifications.map(qual => `
-                                            <tr>
-                                                <td>${qual.institution || 'N/A'}</td>
-                                                <td>${qual.fromYear || 'N/A'}</td>
-                                                <td>${qual.toYear || 'N/A'}</td>
-                                                <td>${qual.qualification || 'N/A'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ` : '<p class="text-muted">No academic qualifications recorded.</p>'}
-                    </div>
-                </div>
-
-                <!-- Professional Bodies -->
-                ${assessment.professionalBodies.professionalBody ? `
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-certificate me-2"></i>Professional Bodies</h6>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Professional Body:</strong> ${assessment.professionalBodies.professionalBody}</p>
-                        <p><strong>Membership Date:</strong> ${assessment.professionalBodies.membershipDate || 'N/A'}</p>
-                    </div>
-                </div>
-                ` : ''}
-
-                <!-- Service Records -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-history me-2"></i>Records of Service</h6>
-                    </div>
-                    <div class="card-body">
-                        ${assessment.serviceRecords.length > 0 ? `
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Department</th>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Post/Grade</th>
-                                            <th>Supervising Officer</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${assessment.serviceRecords.map(record => `
-                                            <tr>
-                                                <td>${record.serviceDepartment || 'N/A'}</td>
-                                                <td>${record.serviceFrom || 'N/A'}</td>
-                                                <td>${record.serviceTo || 'N/A'}</td>
-                                                <td>${record.servicePost || 'N/A'}</td>
-                                                <td>${record.supervisingOfficer || 'N/A'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ` : '<p class="text-muted">No service records available.</p>'}
-                    </div>
-                </div>
-
-                <!-- Training Records -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-chalkboard-teacher me-2"></i>Training & Development</h6>
-                    </div>
-                    <div class="card-body">
-                        ${assessment.trainingRecords.length > 0 ? `
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Course Title</th>
-                                            <th>Institution</th>
-                                            <th>Duration</th>
-                                            <th>Award</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${assessment.trainingRecords.map(training => `
-                                            <tr>
-                                                <td>${training.trainingDate || 'N/A'}</td>
-                                                <td>${training.courseTitle || 'N/A'}</td>
-                                                <td>${training.trainingInstitution || 'N/A'}</td>
-                                                <td>${training.trainingDuration || 'N/A'}</td>
-                                                <td>${training.trainingAward || 'N/A'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ` : '<p class="text-muted">No training records available.</p>'}
-                    </div>
-                </div>
-
-                <!-- Job Description & Performance -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-tasks me-2"></i>Job Description & Performance</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <h6>Main Duties:</h6>
-                            <p class="text-justify">${assessment.jobDescription.jobDescription || 'N/A'}</p>
-                        </div>
-                        
-                        ${assessment.jobDescription.difficulties ? `
-                        <div class="mb-3">
-                            <h6>Difficulties Encountered:</h6>
-                            <p class="text-justify">${assessment.jobDescription.difficulties}</p>
-                        </div>
-                        ` : ''}
-                        
-                        ${assessment.jobDescription.additionalInfo ? `
-                        <div class="mb-3">
-                            <h6>Additional Information:</h6>
-                            <p class="text-justify">${assessment.jobDescription.additionalInfo}</p>
-                        </div>
-                        ` : ''}
-                        
-                        ${assessment.jobDescription.majorContributions ? `
-                        <div class="mb-3">
-                            <h6>Major Contributions:</h6>
-                            <p class="text-justify">${assessment.jobDescription.majorContributions}</p>
-                        </div>
-                        ` : ''}
-                        
-                        ${assessment.jobDescription.publications ? `
-                        <div class="mb-3">
-                            <h6>Publications:</h6>
-                            <p class="text-justify">${assessment.jobDescription.publications}</p>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-
-                <!-- Supporting Documents -->
-                ${assessment.supportingDocument ? `
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-paperclip me-2"></i>Supporting Documents</h6>
-                    </div>
-                    <div class="card-body">
-                        <a href="/api/download/${assessment.supportingDocument}" class="btn btn-outline-primary">
-                            <i class="fas fa-download me-2"></i>Download Supporting Document
-                        </a>
-                    </div>
-                </div>
-                ` : ''}
-
-                <!-- HOD Evaluation (if exists) -->
-                ${assessment.hodEvaluation ? `
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>HOD Evaluation</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Evaluated by:</strong> ${assessment.hodEvaluation.evaluatedBy}</p>
-                                <p><strong>Evaluation Date:</strong> ${new Date(assessment.hodEvaluation.evaluatedAt).toLocaleDateString()}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Total Score:</strong> ${assessment.hodEvaluation.totalScore || 'N/A'}%</p>
-                                <p><strong>Recommendation:</strong> ${assessment.hodEvaluation.recommendation || 'N/A'}</p>
-                            </div>
-                        </div>
-                        ${assessment.hodEvaluation.comments ? `
-                        <div class="mt-3">
-                            <h6>HOD Comments:</h6>
-                            <p class="text-justify">${assessment.hodEvaluation.comments}</p>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-                ` : ''}
-            `;
-        }
-
-        // Go to evaluation page
-        function goToEvaluation() {
-            if (currentAssessmentId) {
-                window.location.href = `/hod-evaluation.html?id=${currentAssessmentId}`;
-            }
-        }
-
-        // Helper functions
-        function getStatusColor(status) {
-            const colors = {
-                'submitted': 'info',
-                'hod_evaluated': 'warning',
-                'completed': 'success'
-            };
-            return colors[status] || 'secondary';
-        }
-
-        function formatStatus(status) {
-            const formats = {
-                'submitted': 'Pending HOD Review',
-                'hod_evaluated': 'Pending Committee Review',
-                'completed': 'Completed'
-            };
-            return formats[status] || status;
-        }
-
-        // Set current date and load data
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const currentDate = new Date().toLocaleDateString('en-US', {
                 weekday: 'long',
                 year: 'numeric',
@@ -681,20 +222,14 @@
             // Load user info for welcome section
             loadUserInfo().then(() => {
                 const userName = document.getElementById('userName').textContent;
+                const userFaculty = document.getElementById('userFaculty').textContent;
                 const userDepartment = document.getElementById('userDepartment').textContent;
                 
                 document.getElementById('userNameWelcome').textContent = userName;
+                document.getElementById('userFacultyWelcome').textContent = userFaculty;
                 document.getElementById('userDepartmentWelcome').textContent = userDepartment;
             });
-
-            // Load appraisals
-            loadHODAppraisals();
         });
-
-        // Make functions globally available
-        window.viewCompleteAssessment = viewCompleteAssessment;
-        window.filterAppraisals = filterAppraisals;
-        window.goToEvaluation = goToEvaluation;
     </script>
 </body>
 </html>

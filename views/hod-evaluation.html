@@ -46,7 +46,7 @@
                                 Department: <span id="userDepartment">Loading...</span>
                             </h6></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                            <li><a class="dropdown-item" href="#" id="logoutButton">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout
                             </a></li>
                         </ul>
@@ -111,7 +111,7 @@
             </div>
 
             <!-- HOD Evaluation Form -->
-            <form id="hodEvaluationForm">
+            <form id="hodEvaluationForm" data-staff-id="">
                 <!-- Performance Evaluation Matrix for Staff School Teachers -->
                 <div class="card mb-4">
                     <div class="card-header bg-success text-white">
@@ -142,7 +142,7 @@
                                             <td><small>Prepares adequate and qualitative lesson notes as and when due</small></td>
                                             <td><small>Does not prepare for his lessons as appropriate</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_1" required>
+                                                <select class="form-select form-select-sm" name="item_1" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -161,7 +161,7 @@
                                             <td><small>Uses appropriate quantity and quality of teaching aids all the time</small></td>
                                             <td><small>Does not value the use of teaching aid</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_2" required>
+                                                <select class="form-select form-select-sm" name="item_2" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -180,7 +180,7 @@
                                             <td><small>Conducts lessons excellently with the use of appropriate methods</small></td>
                                             <td><small>Struggles with the delivery of his/her lessons</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_3" required>
+                                                <select class="form-select form-select-sm" name="item_3" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -199,7 +199,7 @@
                                             <td><small>Has good mastery of the subject matter</small></td>
                                             <td><small>Leaves authority in doubt of his knowledge of the subject matter</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_4" required>
+                                                <select class="form-select form-select-sm" name="item_4" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -218,7 +218,7 @@
                                             <td><small>Always cogent and clear. Puts his points across convincingly and concisely</small></td>
                                             <td><small>Ambiguous, clumsy and obscure. Finds it difficult to express himself/herself</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_5" required>
+                                                <select class="form-select form-select-sm" name="item_5" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -237,7 +237,7 @@
                                             <td><small>Uses appropriate techniques to carry his pupils along</small></td>
                                             <td><small>Does not carry his/her pupils along</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_6" required>
+                                                <select class="form-select form-select-sm" name="item_6" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -256,7 +256,7 @@
                                             <td><small>Organization and Management of his/her class are highly commendable</small></td>
                                             <td><small>The tone of the class exudes planlessness and repels the pupils</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_7" required>
+                                                <select class="form-select form-select-sm" name="item_7" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -275,7 +275,7 @@
                                             <td><small>Performs competently under pressure</small></td>
                                             <td><small>Easily thrown off balance, not reliable, even under normal conditions</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_8" required>
+                                                <select class="form-select form-select-sm" name="item_8" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -294,7 +294,7 @@
                                             <td><small>Gets great deal done within a set time, maintains a very high standard. His work is virtually error-proof</small></td>
                                             <td><small>Sloppy in output. Maintains consistently low standard of work. Source of constant complaints</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_9" required>
+                                                <select class="form-select form-select-sm" name="item_9" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -313,7 +313,7 @@
                                             <td><small>Regularly Punctual at work and marks the attendance register as appropriate</small></td>
                                             <td><small>No regard for punctuality. Truant</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_10" required>
+                                                <select class="form-select form-select-sm" name="item_10" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -332,7 +332,7 @@
                                             <td><small>Gives adequate assignment to pupils and evaluate the work as and evaluate the work as and when due</small></td>
                                             <td><small>Hardly ever gives assignments and does not review work given to pupils</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_11" required>
+                                                <select class="form-select form-select-sm" name="item_11" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -351,7 +351,7 @@
                                             <td><small>Self-confident, Enjoys respect of parents, pupils and colleagues. Tactful and conducts himself/herself well</small></td>
                                             <td><small>Conducts himself/herself in a manner unbecoming of a teacher. He/she dresses to cause distraction and embarrassment</small></td>
                                             <td>
-                                                <select class="form-select form-select-sm" name="item_12" required>
+                                                <select class="form-select form-select-sm" name="item_12" required onchange="updateHodScore()">
                                                     <option value="">Select</option>
                                                     <option value="5">5 - Excellent</option>
                                                     <option value="4">4 - Good</option>
@@ -390,103 +390,7 @@
                     </div>
                 </div>
 
-                <!-- Training Needs Assessment -->
-                <div class="card mb-4">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0">
-                            <i class="fas fa-graduation-cap me-2"></i>Training Needs Assessment
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="trainingNeeds" class="form-label">
-                                <strong>If as a result of the assessments made earlier in the report, you consider that the performance or potential could be recommended for training, please specify the training needs:</strong>
-                            </label>
-                            <textarea class="form-control" id="trainingNeeds" name="trainingNeeds" rows="4" placeholder="List specific training needs and recommendations..."></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="alternativeTraining" class="form-label">
-                                <strong>If they cannot be met by training on the job, please suggest, if possible, in which other areas they might be met:</strong>
-                            </label>
-                            <textarea class="form-control" id="alternativeTraining" name="alternativeTraining" rows="3" placeholder="Suggest alternative training approaches or external training programs..."></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="nextJobLevel" id="sameLevel" value="same_level">
-                                    <label class="form-check-label" for="sameLevel">Next job at the same level</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="nextJobLevel" id="differentJob" value="different_job">
-                                    <label class="form-check-label" for="differentJob">A different job in the same grade</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="nextJobLevel" id="transferJob" value="transfer_job">
-                                    <label class="form-check-label" for="transferJob">Transfer to a job at similar level in another occupation group or cadre</label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-3">
-                            <label for="jobTypeReason" class="form-label">
-                                <strong>If you have answered YES to any of the questions, say which kind of job and your reasons below:</strong>
-                            </label>
-                            <textarea class="form-control" id="jobTypeReason" name="jobTypeReason" rows="3" placeholder="Specify job type and provide detailed reasons..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Overall Assessment and Comments -->
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-comments me-2"></i>Overall Assessment & Comments
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="overallPerformance" class="form-label"><strong>Overall Performance Rating:</strong></label>
-                                <select class="form-select" id="overallPerformance" name="overallPerformance" required>
-                                    <option value="">Select Rating</option>
-                                    <option value="outstanding">Outstanding (80-100%)</option>
-                                    <option value="very_good">Very Good (70-79%)</option>
-                                    <option value="good">Good (60-69%)</option>
-                                    <option value="fair">Fair (50-59%)</option>
-                                    <option value="unsatisfactory">Unsatisfactory (Below 50%)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="recommendation" class="form-label"><strong>Recommendation:</strong></label>
-                                <select class="form-select" id="recommendation" name="recommendation" required>
-                                    <option value="">Select Recommendation</option>
-                                    <option value="promotion">Promotion</option>
-                                    <option value="confirmation">Confirmation</option>
-                                    <option value="normal_increment">Normal Increment</option>
-                                    <option value="training">Training</option>
-                                    <option value="improvement_needed">Improvement Needed</option>
-                                    <option value="disciplinary_action">Disciplinary Action Required</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-3">
-                            <label for="comments" class="form-label"><strong>Additional Comments:</strong></label>
-                            <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Provide detailed comments on the staff member's performance, strengths, areas for improvement, and any other relevant observations..."></textarea>
-                        </div>
-                        
-                        <div class="mt-3">
-                            <label for="developmentPlan" class="form-label"><strong>Career Development Plan:</strong></label>
-                            <textarea class="form-control" id="developmentPlan" name="developmentPlan" rows="3" placeholder="Outline recommended career development activities and goals for the next evaluation period..."></textarea>
-                        </div>
-                    </div>
-                </div>
+               
 
                 <!-- Submission Section -->
                 <div class="card">
@@ -526,66 +430,94 @@
         </div>
     </footer>
 
+    <!-- Bootstrap & FontAwesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Main App Script -->
     <script src="/js/main.js"></script>
     <script>
-        // Calculate score dynamically
-        function updateScore() {
-            const selects = document.querySelectorAll('select[name^="item_"]');
-            let totalScore = 0;
-            let selectedCount = 0;
-            
-            selects.forEach(select => {
-                if (select.value !== '') {
-                    totalScore += parseInt(select.value);
-                    selectedCount++;
-                }
-            });
-            
-            const maxPossibleScore = selects.length * 5;
-            const percentage = selectedCount > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
-            
-            document.getElementById('totalScore').textContent = totalScore + ' / ' + maxPossibleScore;
-            document.getElementById('percentageScore').textContent = percentage + '%';
-            
-            // Update grade text
-            let gradeText = 'No Grade';
-            let overallRating = '';
-            
-            if (percentage >= 80) {
-                gradeText = 'Outstanding';
-                overallRating = 'outstanding';
-            } else if (percentage >= 70) {
-                gradeText = 'Very Good';
-                overallRating = 'very_good';
-            } else if (percentage >= 60) {
-                gradeText = 'Good';
-                overallRating = 'good';
-            } else if (percentage >= 50) {
-                gradeText = 'Fair';
-                overallRating = 'fair';
-            } else if (percentage > 0) {
-                gradeText = 'Unsatisfactory';
-                overallRating = 'unsatisfactory';
-            }
-            
-            document.getElementById('gradeText').textContent = gradeText;
-            
-            // Auto-select overall performance rating
-            if (overallRating && selectedCount === selects.length) {
-                document.getElementById('overallPerformance').value = overallRating;
-            }
-        }
-
-        // Add event listeners to all evaluation selects
         document.addEventListener('DOMContentLoaded', function() {
-            const selects = document.querySelectorAll('select[name^="item_"]');
-            selects.forEach(select => {
-                select.addEventListener('change', updateScore);
-            });
-            
-            // Initial score calculation
-            updateScore();
+            const urlParams = new URLSearchParams(window.location.search);
+            const appraisalId = urlParams.get('id');
+
+            if (appraisalId) {
+                fetch(`/api/hod/appraisals/${appraisalId}`)
+                    .then(response => response.json())
+                    .then(appraisal => {
+                        document.getElementById('staffName').textContent = appraisal.staffId.name;
+                        document.getElementById('department').textContent = appraisal.staffId.department;
+                        document.getElementById('submissionDate').textContent = new Date(appraisal.createdAt).toLocaleDateString();
+                        
+                        // Set staffId on the form for submission logic
+                        document.getElementById('hodEvaluationForm').dataset.staffId = appraisal.staffId._id;
+                    })
+                    .catch(error => console.error('Error fetching appraisal details:', error));
+            }
+
+            // Set up form submission handler
+            const form = document.getElementById('hodEvaluationForm');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const appraisalId = new URLSearchParams(window.location.search).get('id');
+                    if (!appraisalId) {
+                        return showAlert('Error: Could not find Appraisal ID.', 'danger');
+                    }
+
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const hideSpinner = showSpinner(submitBtn);
+
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch(`/api/hod/appraisals/${appraisalId}/evaluate`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            showAlert('Evaluation submitted successfully! Redirecting to personality traits evaluation...', 'success');
+                            
+                            // Get staff category and redirect to personality traits
+                            const staffId = form.dataset.staffId;
+                            if (staffId) {
+                                // Fetch staff details to get category
+                                fetch(`/api/staff/${staffId}`)
+                                    .then(response => response.json())
+                                    .then(staffData => {
+                                        const staffCategory = staffData.staff.category || 'junior';
+                                        const staffType = staffCategory.toLowerCase().includes('senior') ? 'senior' : 'junior';
+                                        
+                                        setTimeout(() => {
+                                            window.location.href = `/hod-personality-traits-dynamic.html?staffId=${staffId}&staffType=${staffType}`;
+                                        }, 2000);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error fetching staff details:', error);
+                                        // Fallback to junior staff type
+                                        const staffType = 'junior';
+                                        setTimeout(() => {
+                                            window.location.href = `/hod-personality-traits-dynamic.html?staffId=${staffId}&staffType=${staffType}`;
+                                        }, 2000);
+                                    });
+                            } else {
+                                // Fallback redirect to dashboard if no staffId
+                                setTimeout(() => window.location.href = '/hod-dashboard.html', 2000);
+                            }
+                        } else {
+                            showAlert(result.message || 'Error submitting evaluation.', 'danger');
+                        }
+                    } catch (error) {
+                        console.error('Submission error:', error);
+                        showAlert('An error occurred while submitting the evaluation.', 'danger');
+                    } finally {
+                        hideSpinner();
+                    }
+                });
+            }
         });
     </script>
 </body>

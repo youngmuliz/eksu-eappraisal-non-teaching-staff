@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Faculty Review Panel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .profile-photo-container {
+            position: relative;
+            display: inline-block;
+        }
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #dc3545;
+        }
+        .profile-photo-placeholder {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: #6c757d;
+            border: 5px solid #dc3545;
+        }
+        .photo-upload-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .photo-upload-btn:hover {
+            background: #bb2d3b;
+        }
+        #photoInput {
+            display: none;
+        }
+        .history-table {
+            font-size: 14px;
+        }
+        .edit-mode {
+            display: none;
+        }
+        .view-mode.active ~ .edit-mode {
+            display: none;
+        }
+        .edit-mode.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/faculty-dashboard.html">
+                <i class="fas fa-university me-2"></i>
+                E-Appraisal System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/faculty-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/faculty-profile.html">
+                            <i class="fas fa-gavel me-1"></i>My Profile
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-gavel me-1"></i>
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/faculty-profile.html">
+                                <i class="fas fa-user me-2"></i>Profile
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold text-danger">
+                        <i class="fas fa-gavel me-2"></i>My Profile
+                    </h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/faculty-dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Profile</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Personal Information Section -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="profile-photo-container mb-3">
+                                <div id="photoPlaceholder" class="profile-photo-placeholder">
+                                    <i class="fas fa-gavel"></i>
+                                </div>
+                                <img id="profilePhotoImg" class="profile-photo" style="display: none;" alt="Profile Photo">
+                                <input type="file" id="photoInput" accept="image/*">
+                                <button class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            <h4 id="displayFullName" class="fw-bold">Loading...</h4>
+                            <p class="text-muted" id="displayRole">Faculty Review Panel</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Personal Information
+                            </h5>
+                            <button id="editBtn" class="btn btn-danger btn-sm" onclick="toggleEditMode()">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- View Mode -->
+                            <div id="viewMode" class="view-mode active">
+                                <div class="row mb-3">
+                                    <div class="col-md-4"><strong>Full Name:</strong></div>
+                                    <div class="col-md-8" id="viewFullName">Loading...</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4"><strong>Email:</strong></div>
+                                    <div class="col-md-8" id="viewEmail">Loading...</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4"><strong>Phone:</strong></div>
+                                    <div class="col-md-8" id="viewPhone">Loading...</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4"><strong>Role:</strong></div>
+                                    <div class="col-md-8">
+                                        <span class="badge bg-danger" id="viewRole">Faculty</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Mode -->
+                            <div id="editMode" class="edit-mode">
+                                <form id="profileForm">
+                                    <div class="mb-3">
+                                        <label for="editFullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="editFullName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editEmail" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="editEmail" disabled>
+                                        <small class="text-muted">Email cannot be changed</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editPhone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="editPhone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Role</label>
+                                        <input type="text" class="form-control" id="editRole" disabled>
+                                        <small class="text-muted">Role cannot be changed</small>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-danger" onclick="saveProfile()">
+                                            <i class="fas fa-save me-2"></i>Save Changes
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" onclick="toggleEditMode()">
+                                            <i class="fas fa-times me-2"></i>Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appraisal History Section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-history me-2"></i>Appraisal History
+                            </h5>
+                            <button class="btn btn-danger btn-sm" onclick="downloadReport()">
+                                <i class="fas fa-download me-2"></i>Download Complete Appraisal Report
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover history-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Stage</th>
+                                            <th>Score</th>
+                                            <th>Comments</th>
+                                            <th>Reviewed By</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyTableBody">
+                                        <tr>
+                                            <td colspan="5" class="text-center">
+                                                <div class="spinner-border text-danger" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let profileData = null;
+        let isEditMode = false;
+
+        // Load profile on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            loadAppraisalHistory();
+
+            // Handle photo upload
+            document.getElementById('photoInput').addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    uploadPhoto(e.target.files[0]);
+                }
+            });
+        });
+
+        async function loadProfile() {
+            try {
+                const response = await fetch('/api/profile');
+                const result = await response.json();
+                
+                if (result.success && result.profile) {
+                    profileData = result.profile;
+                    displayProfile(result.profile);
+                } else {
+                    alert('Failed to load profile');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                alert('Error loading profile');
+            }
+        }
+
+        function displayProfile(profile) {
+            // Display mode
+            document.getElementById('viewFullName').textContent = profile.fullName;
+            document.getElementById('viewEmail').textContent = profile.email;
+            document.getElementById('viewPhone').textContent = profile.phone;
+            document.getElementById('viewRole').textContent = profile.role.charAt(0).toUpperCase() + profile.role.slice(1);
+
+            // Edit mode
+            document.getElementById('editFullName').value = profile.fullName;
+            document.getElementById('editEmail').value = profile.email;
+            document.getElementById('editPhone').value = profile.phone;
+            document.getElementById('editRole').value = profile.role.charAt(0).toUpperCase() + profile.role.slice(1);
+
+            // Photo display
+            if (profile.profilePhoto) {
+                document.getElementById('photoPlaceholder').style.display = 'none';
+                document.getElementById('profilePhotoImg').src = profile.profilePhoto;
+                document.getElementById('profilePhotoImg').style.display = 'block';
+            }
+
+            // Header display
+            document.getElementById('displayFullName').textContent = profile.fullName;
+            document.getElementById('displayRole').textContent = profile.role.charAt(0).toUpperCase() + profile.role.slice(1);
+            document.getElementById('userName').textContent = profile.fullName;
+        }
+
+        async function loadAppraisalHistory() {
+            try {
+                const response = await fetch('/api/profile/appraisal-history');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayAppraisalHistory(result.appraisalHistory);
+                }
+            } catch (error) {
+                console.error('Error loading appraisal history:', error);
+                document.getElementById('historyTableBody').innerHTML = 
+                    '<tr><td colspan="5" class="text-center text-danger">Error loading history</td></tr>';
+            }
+        }
+
+        function displayAppraisalHistory(history) {
+            const tbody = document.getElementById('historyTableBody');
+            
+            if (!history || history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No appraisal history available</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = history.map(entry => `
+                <tr>
+                    <td><span class="badge bg-info">${entry.stage}</span></td>
+                    <td>${entry.score !== null ? entry.score : 'N/A'}</td>
+                    <td>${entry.comments || 'N/A'}</td>
+                    <td>${entry.reviewedBy}</td>
+                    <td>${new Date(entry.date).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const viewMode = document.getElementById('viewMode');
+            const editMode = document.getElementById('editMode');
+            
+            if (isEditMode) {
+                viewMode.classList.remove('active');
+                editMode.classList.add('active');
+            } else {
+                editMode.classList.remove('active');
+                viewMode.classList.add('active');
+            }
+        }
+
+        async function saveProfile() {
+            const fullName = document.getElementById('editFullName').value;
+            const phone = document.getElementById('editPhone').value;
+
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ fullName, phone }),
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Profile updated successfully');
+                    profileData = result.profile;
+                    displayProfile(result.profile);
+                    toggleEditMode();
+                } else {
+                    alert(result.message || 'Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile');
+            }
+        }
+
+        async function uploadPhoto(file) {
+            const formData = new FormData();
+            formData.append('profilePhoto', file);
+
+            try {
+                const response = await fetch('/api/profile/upload-photo', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('photoPlaceholder').style.display = 'none';
+                    document.getElementById('profilePhotoImg').src = result.profilePhoto;
+                    document.getElementById('profilePhotoImg').style.display = 'block';
+                    alert('Photo uploaded successfully');
+                } else {
+                    alert(result.message || 'Failed to upload photo');
+                }
+            } catch (error) {
+                console.error('Error uploading photo:', error);
+                alert('Error uploading photo');
+            }
+        }
+
+        function downloadReport() {
+            window.location.href = '/api/profile/download-report';
+        }
+
+        function logout() {
+            fetch('/api/auth/logout', { method: 'POST' })
+                .then(() => window.location.href = '/login.html')
+                .catch(() => window.location.href = '/login.html');
+        }
+    </script>
+</body>
+</html>
+
